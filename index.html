@@ -471,11 +471,10 @@ html,body{height:100%;background:var(--bk);color:var(--wh);font-family:'DM Sans'
     <div class="auth-box">
       <div class="auth-logo">Aletheiahq</div>
       <div class="auth-sub">Sign in to your account</div>
-      <!-- ADMIN PASS HINT -->
-      <div class="admin-hint"><i data-lucide="shield" style="width:13px;height:13px"></i> <div><strong>Developer / Admin access:</strong> Use email <code>info@asamoahgroup.com</code> — password <code>KWADWO1717</code></div></div>
-      <div class="f-grp"><label class="f-lbl">Email</label><input class="f-inp" id="li-em" placeholder="your@email.com" placeholder="your@email.com"/></div>
-      <div class="f-grp"><label class="f-lbl">Password</label><input class="f-inp" id="li-pw" type="password" placeholder="••••••••" placeholder="••••••••"/></div>
-      <button class="btn-wh" onclick="doLogin()" style="margin-bottom:8px"><i data-lucide="arrow-right" style="width:14px;height:14px"></i> Sign in</button>
+      <div id="login-error" style="display:none;padding:10px 12px;background:var(--bk3);border-left:2px solid var(--wh3);margin-bottom:14px;font-size:12px;color:var(--wh2)"></div>
+      <div class="f-grp"><label class="f-lbl">Email</label><input class="f-inp" id="li-em" placeholder="your@email.com" autocomplete="email"/></div>
+      <div class="f-grp"><label class="f-lbl">Password</label><input class="f-inp" id="li-pw" type="password" placeholder="••••••••" autocomplete="current-password"/></div>
+      <button class="btn-wh" onclick="doLogin()" id="login-btn" style="margin-bottom:8px"><i data-lucide="arrow-right" style="width:14px;height:14px"></i> Sign in</button>
       <div class="auth-divider">No account? <span class="auth-link" onclick="showScreen('s-register')">Create one</span></div>
       <div style="text-align:center"><span class="auth-link" style="font-size:11px" onclick="showScreen('s-landing')">← Back</span></div>
     </div>
@@ -1385,7 +1384,7 @@ That's the problem OIA solves. Comment "SYSTEMS" if you want the diagnostic we u
         <div style="max-width:500px">
           <div class="card"><div class="card-t"><i data-lucide="user" style="width:15px;height:15px"></i> Account</div><div style="margin-top:12px"><div class="f-grp"><label class="f-lbl">Full name</label><input class="f-inp" placeholder="Your full name"/></div><div class="f-grp"><label class="f-lbl">Email</label><input class="f-inp" placeholder="your@email.com"/></div><div class="f-grp"><label class="f-lbl">Organisation</label><input class="f-inp" value="" placeholder="Your business name"/></div><button class="btn-s wh" onclick="toast('Saved')"><i data-lucide="check" style="width:12px;height:12px"></i> Save</button></div></div>
           <div class="card"><div class="card-t"><i data-lucide="credit-card" style="width:15px;height:15px"></i> Billing</div><div class="row-item"><span style="font-size:13px">Growth Plan — Monthly</span><span class="badge b-ok">Active</span></div><div class="row-item"><span style="font-size:12px;color:var(--wh4)">$79/month · Renews monthly</span><button class="btn-s ow" onclick="toast('Opening Stripe portal…')"><i data-lucide="external-link" style="width:11px;height:11px"></i> Manage</button></div></div>
-          <div class="card" id="admin-creds" style="display:none"><div class="card-t"><i data-lucide="shield" style="width:15px;height:15px"></i> Admin Access</div><div class="divider"></div><div style="background:var(--bk2);border:1px solid var(--bk3);border-left:2px solid var(--wh);padding:12px;margin-top:10px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:var(--wh4);margin-bottom:8px">Developer / Admin credentials</div><div style="display:flex;flex-direction:column;gap:5px;font-size:12px"><div><span style="color:var(--wh4)">Email:</span> <span style="font-family:'DM Mono',monospace;color:var(--wh2)">admin@aletheiahq.com</span></div><div><span style="color:var(--wh4)">Password:</span> <span style="font-family:'DM Mono',monospace;color:var(--wh2)">ALETHEIA2026#ADMIN</span></div><div><span style="color:var(--wh4)">Role:</span> <span class="badge b-wh" style="font-size:9px">Super Admin</span></div></div></div></div>
+          <div class="card" id="admin-creds" style="display:none"><div class="card-t"><i data-lucide="shield" style="width:15px;height:15px"></i> Admin Access</div><div class="divider"></div><div style="background:var(--bk2);border:1px solid var(--bk3);border-left:2px solid var(--wh);padding:12px;margin-top:10px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:var(--wh4);margin-bottom:8px">Developer / Admin credentials</div><div style="display:flex;flex-direction:column;gap:5px;font-size:12px"><div><span style="color:var(--wh4)">Email:</span> <span style="font-family:'DM Mono',monospace;color:var(--wh2)">info@asamoahgroup.com</span></div><div><span style="color:var(--wh4)">Password:</span> <span style="font-family:'DM Mono',monospace;color:var(--wh2)">KWADWO1717</span></div><div><span style="color:var(--wh4)">Role:</span> <span class="badge b-wh" style="font-size:9px">Super Admin</span></div></div></div></div>
           <div class="card"><div class="card-t"><i data-lucide="mic" style="width:15px;height:15px"></i> Brand Voice</div><div style="margin-top:10px"><div class="f-grp"><label class="f-lbl">Tone</label><select class="f-inp"><option>Professional + Authoritative</option><option>Direct + Bold</option><option>Conversational</option></select></div><div class="f-grp"><label class="f-lbl">Avoid</label><input class="f-inp" placeholder="Competitor names, pricing comparisons…"/></div><button class="btn-s wh" onclick="toast('Voice saved')"><i data-lucide="check" style="width:12px;height:12px"></i> Save</button></div></div>
         </div>
       </div>
@@ -1485,14 +1484,53 @@ function showScreen(id){
   lucide.createIcons();
 }
 function doLogin(){
-  const em=document.getElementById('li-em').value.trim();
+  const em=document.getElementById('li-em').value.trim().toLowerCase();
   const pw=document.getElementById('li-pw').value.trim();
-  const isAdmin=(em==='admin@aletheiahq.com'&&pw==='ALETHEIA2026#ADMIN');
-  goAppDirect(isAdmin);
+  const errEl=document.getElementById('login-error');
+  const btn=document.getElementById('login-btn');
+
+  // Validation
+  if(!em){errEl.textContent='Please enter your email address.';errEl.style.display='block';return;}
+  if(!pw){errEl.textContent='Please enter your password.';errEl.style.display='block';return;}
+  errEl.style.display='none';
+
+  // Loading state
+  btn.innerHTML='<div style="width:13px;height:13px;border:1.5px solid rgba(0,0,0,0.3);border-top-color:#000;border-radius:50%;animation:spin 0.8s linear infinite"></div> Signing in…';
+  btn.disabled=true;
+
+  setTimeout(()=>{
+    btn.innerHTML='<i data-lucide="arrow-right" style="width:14px;height:14px"></i> Sign in';
+    btn.disabled=false;
+    lucide.createIcons();
+
+    // Admin credentials
+    const isAdmin=(em==='info@asamoahgroup.com'&&pw==='KWADWO1717');
+
+    // Wrong password for non-admin — only block if email looks real but password wrong
+    if(!isAdmin && pw.length < 6){
+      errEl.textContent='Password must be at least 6 characters.';
+      errEl.style.display='block';
+      return;
+    }
+
+    // All valid logins go through
+    goAppDirect(isAdmin, em);
+  }, 900);
 }
-function goAppDirect(isAdmin){
+
+function goAppDirect(isAdmin, email=''){
   ['s-landing','s-login','s-register','s-payment','s-confirm'].forEach(s=>{document.getElementById(s).style.display='none';});
   document.getElementById('s-app').classList.add('show');
+
+  // Set user display name from email
+  const displayName = email ? email.split('@')[0].split('.').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ') : 'Demo User';
+  const displayEmail = email || 'demo@aletheiahq.com';
+  const initials = displayName.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() || 'AU';
+
+  document.getElementById('s-avt').textContent = initials;
+  document.getElementById('s-uname').textContent = displayName;
+  document.getElementById('s-uemail').textContent = displayEmail;
+
   if(isAdmin){
     document.getElementById('admin-section').style.display='block';
     document.getElementById('nav-quotestudio').style.display='flex';
@@ -1500,12 +1538,14 @@ function goAppDirect(isAdmin){
     document.getElementById('admin-crown').style.display='flex';
     document.getElementById('admin-creds').style.display='block';
     document.getElementById('s-avt').textContent='FA';
-    document.getElementById('s-uname').textContent='Your Name';
-    document.getElementById('s-uemail').textContent='admin@aletheiahq.com';
+    document.getElementById('s-uname').textContent='Frank Asamoah';
+    document.getElementById('s-uemail').textContent='info@asamoahgroup.com';
     document.getElementById('sidebar-plan-lbl').textContent='Super Admin';
     document.getElementById('sidebar-plan-use').textContent='Unlimited access';
     document.getElementById('sidebar-plan-bar').style.width='100%';
-    toast('Admin access granted — all features unlocked');
+    toast('Welcome back, Frank — admin access granted');
+  } else {
+    toast('Welcome to Aletheiahq — explore the platform');
   }
   checkMobile();
   lucide.createIcons();
@@ -1516,8 +1556,17 @@ function goConfirm(){
   btn.disabled=true;
   setTimeout(()=>{showScreen('s-confirm');lucide.createIcons();},1800);
 }
-function goApp(){goAppDirect(false);}
-function signOut(){document.getElementById('s-app').classList.remove('show');showScreen('s-landing');}
+function goApp(){goAppDirect(false,'demo@aletheiahq.com');}
+function signOut(){
+  document.getElementById('s-app').classList.remove('show');
+  // Reset admin UI
+  document.getElementById('admin-section').style.display='none';
+  document.getElementById('nav-quotestudio').style.display='none';
+  document.getElementById('nav-agent').style.display='none';
+  document.getElementById('admin-crown').style.display='none';
+  document.getElementById('admin-creds').style.display='none';
+  showScreen('s-landing');
+}
 
 // ── PAGES ──
 const pTitles={dashboard:'Dashboard',pipeline:'1-Minute Pipeline',autopublish:'Auto-Publish Engine',generate:'Generate Campaign',posts:'Post Library',analyzer:'Profile Analyzer',repurpose:'Repurpose Engine',ghostwriter:'Ghost Writer',leads:'Lead Engine',manager:'AI Manager',calendar:'Content Calendar',analytics:'Analytics',quotestudio:'Quote Card Studio',agent:'Aletheiahq Agent',settings:'Settings'};
