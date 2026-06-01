@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Aletheiahq — AI Marketing Intelligence. Black & white. Pure authority."/>
+<title>Aletheiahq</title>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Montserrat:wght@200;300;400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bk:#000;--bk1:#0A0A0A;--bk2:#111;--bk3:#1A1A1A;--bk4:#222;--bk5:#2E2E2E;
+  --wh:#FFF;--wh1:#F5F5F5;--wh2:#E0E0E0;--wh3:#AAAAAA;--wh4:#666;
+  --char:#333;--char2:#444;
+  --r:6px;--r2:12px;--shadow:0 4px 32px rgba(0,0,0,0.9);
+  --sidebar-w:210px;
+}
+html,body{height:100%;background:var(--bk);color:var(--wh);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6;overflow:hidden}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--bk2)}
+::-webkit-scrollbar-thumb{background:var(--bk5)}
+
+/* ═══════════ SCREENS ═══════════ */
+.screen{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:var(--bk)}
+#s-landing,#s-login,#s-register,#s-payment,#s-confirm{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:var(--bk);overflow-y:auto}
+#s-login,#s-register,#s-payment,#s-confirm{display:none}
+#s-app{display:none;position:fixed;inset:0}
+#s-app.show{display:flex}
+
+/* ═══════════ LANDING ═══════════ */
+.land-wrap{width:100%;max-width:1080px;padding:32px 24px;position:relative;z-index:1}
+.land-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:60px}
+.land-logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--wh)}
+.land-logo span{font-weight:300;letter-spacing:4px}
+.land-hero-wrap{display:grid;grid-template-columns:1.1fr 0.9fr;gap:80px;align-items:center;margin-bottom:80px}
+.land-h1{font-family:'Cormorant Garamond',serif;font-size:62px;font-weight:300;line-height:1.0;margin-bottom:22px;letter-spacing:-1px}
+.land-h1 strong{font-weight:700}
+.land-h1 em{font-style:italic;font-weight:300}
+.land-sub{font-size:15px;color:var(--wh3);line-height:1.85;margin-bottom:30px;font-weight:300}
+.land-stats{display:flex;gap:32px;margin-bottom:36px;flex-wrap:wrap}
+.s-num{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600;line-height:1}
+.s-lbl{font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:1.5px;margin-top:2px}
+.land-box{background:var(--bk1);border:1px solid var(--bk4);padding:32px}
+.land-box h2{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:400;margin-bottom:4px;letter-spacing:0.5px}
+.land-box p{font-size:12px;color:var(--wh4);margin-bottom:22px}
+.plan-cards{display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
+.pc{padding:14px 16px;border:1px solid var(--bk4);cursor:pointer;transition:all 0.2s;position:relative;background:var(--bk2)}
+.pc:hover,.pc.sel{border-color:var(--wh2)}
+.pc.sel{background:var(--bk3)}
+.pc-pop{position:absolute;top:-1px;right:10px;font-size:9px;padding:2px 8px;background:var(--wh);color:var(--bk);font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.pc-name{font-size:13px;font-weight:500;margin-bottom:2px}
+.pc-price{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--wh)}
+.pc-price span{font-size:12px;font-weight:300;color:var(--wh4);font-family:'DM Sans',sans-serif}
+.pc-feats{font-size:11px;color:var(--wh4);margin-top:3px}
+.btn-wh{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 24px;background:var(--wh);color:var(--bk);font-weight:700;font-size:13px;border:none;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;width:100%;letter-spacing:0.5px;text-transform:uppercase}
+.btn-wh:hover{background:var(--wh2)}
+.btn-bk{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;background:transparent;color:var(--wh2);font-size:13px;border:1px solid var(--bk5);cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;width:100%;margin-top:8px}
+.btn-bk:hover{border-color:var(--wh3);color:var(--wh)}
+.feats-list{display:flex;flex-direction:column;gap:8px;margin-bottom:36px}
+.feat-row{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--wh2)}
+.feat-row i{color:var(--wh);flex-shrink:0}
+/* Portfolio footer */
+.port-footer{border-top:1px solid var(--bk4);padding-top:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.port-links{display:flex;gap:20px;flex-wrap:wrap}
+.port-link{font-size:11px;color:var(--wh4);text-decoration:none;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:0.8px;transition:color 0.2s}
+.port-link:hover{color:var(--wh)}
+
+/* ═══════════ AUTH BOXES ═══════════ */
+.auth-box{background:var(--bk1);border:1px solid var(--bk4);padding:40px;width:100%;max-width:440px}
+.auth-logo{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;letter-spacing:3px;text-transform:uppercase;text-align:center;margin-bottom:4px}
+.auth-sub{font-size:11px;color:var(--wh4);text-align:center;margin-bottom:28px;text-transform:uppercase;letter-spacing:1px}
+.f-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--wh4);display:block;margin-bottom:5px}
+.f-inp{width:100%;padding:11px 13px;background:var(--bk2);border:1px solid var(--bk4);color:var(--wh);font-size:13px;font-family:'DM Sans',sans-serif;transition:border-color 0.2s;outline:none}
+.f-inp:focus{border-color:var(--wh3)}
+.f-inp::placeholder{color:var(--wh4)}
+.f-grp{margin-bottom:14px}
+.pay-plan-row{display:flex;justify-content:space-between;align-items:center;padding:13px;background:var(--bk2);border:1px solid var(--bk4);margin-bottom:18px}
+.cc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.auth-link{color:var(--wh2);cursor:pointer;text-decoration:underline}
+.auth-divider{text-align:center;font-size:12px;color:var(--wh4);margin:12px 0}
+/* ADMIN BADGE on login */
+.admin-hint{background:var(--bk3);border:1px solid var(--bk5);padding:10px 13px;font-size:11px;color:var(--wh3);margin-bottom:16px;display:flex;align-items:center;gap:7px}
+.confirm-ic{width:60px;height:60px;border:1px solid var(--wh);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;color:var(--wh)}
+
+/* ═══════════ APP SHELL ═══════════ */
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--bk1);border-right:1px solid var(--bk3);display:flex;flex-direction:column;height:100vh;overflow:hidden;position:relative;z-index:30}
+.sidebar.col{width:48px}
+.sidebar.col .nav-lbl,.sidebar.col .nav-badge,.sidebar.col .nav-sec,.sidebar.col .plan-area,.sidebar.col .u-info,.sidebar.col .s-tag{display:none}
+.sidebar.col .nav-btn{justify-content:center;padding:10px 0}
+.s-hdr{padding:16px 14px 12px;border-bottom:1px solid var(--bk3);display:flex;align-items:center;justify-content:space-between;min-height:56px}
+.s-wm{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;letter-spacing:2px;text-transform:uppercase;white-space:nowrap}
+.s-tag{font-size:8px;color:var(--wh4);text-transform:uppercase;letter-spacing:1.5px;margin-top:1px}
+.s-nav{flex:1;overflow-y:auto;padding:6px 0}
+.nav-sec{font-size:9px;text-transform:uppercase;letter-spacing:1.2px;color:var(--wh4);padding:10px 14px 3px;opacity:0.5}
+.nav-btn{display:flex;align-items:center;gap:8px;padding:8px 14px;font-size:12px;color:var(--wh4);cursor:pointer;transition:all 0.15s;border-left:2px solid transparent;white-space:nowrap}
+.nav-btn:hover{color:var(--wh);background:rgba(255,255,255,0.03)}
+.nav-btn.active{color:var(--wh);border-left-color:var(--wh);background:rgba(255,255,255,0.04)}
+.nav-btn.admin-nav{color:var(--wh3)}
+.nav-btn.admin-nav.active{border-left-color:var(--wh);color:var(--wh)}
+.nav-icon{width:14px;height:14px;flex-shrink:0}
+.nav-badge{margin-left:auto;font-size:9px;padding:1px 6px;background:var(--bk4);color:var(--wh3)}
+.plan-area{margin:0 10px 10px;padding:11px;background:var(--bk2);border:1px solid var(--bk3)}
+.p-lbl{font-size:9px;color:var(--wh3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px}
+.p-use{font-size:10px;color:var(--wh4);margin-bottom:5px}
+.p-bar{height:2px;background:var(--bk5)}
+.p-fill{height:100%;background:var(--wh)}
+.s-user{padding:10px 14px;border-top:1px solid var(--bk3);display:flex;align-items:center;gap:8px;min-height:52px}
+.u-avt{width:26px;height:26px;background:var(--wh);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--bk);flex-shrink:0}
+.u-name{font-size:12px;font-weight:500}
+.u-email{font-size:10px;color:var(--wh4)}
+.main-area{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:56px;border-bottom:1px solid var(--bk3);background:var(--bk1);flex-shrink:0;gap:10px}
+.tb-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;letter-spacing:0.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.icon-btn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:1px solid var(--bk3);background:transparent;cursor:pointer;color:var(--wh4);transition:all 0.15s;flex-shrink:0}
+.icon-btn:hover{border-color:var(--bk5);color:var(--wh)}
+.notif-dot{width:5px;height:5px;background:var(--wh);border-radius:50%;position:absolute;top:5px;right:5px}
+.btn-s{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;border:1px solid var(--bk3);background:transparent;color:var(--wh3);white-space:nowrap;text-transform:uppercase;letter-spacing:0.5px}
+.btn-s:hover{border-color:var(--bk5);color:var(--wh)}
+.btn-s.wh{background:var(--wh);color:var(--bk);border-color:var(--wh);font-weight:700}
+.btn-s.wh:hover{background:var(--wh2)}
+.btn-s.ow{border-color:var(--wh3);color:var(--wh)}
+.content-area{flex:1;overflow-y:auto;padding:22px}
+.page{display:none}
+.page.active{display:block}
+
+/* ═══════════ COMPONENTS ═══════════ */
+.card{background:var(--bk1);border:1px solid var(--bk3);padding:18px;margin-bottom:14px}
+.card-t{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:400;margin-bottom:3px;display:flex;align-items:center;gap:8px;letter-spacing:0.3px}
+.card-sub{font-size:11px;color:var(--wh4);margin-bottom:14px;text-transform:uppercase;letter-spacing:0.6px}
+.metrics-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.m-box{background:var(--bk2);border:1px solid var(--bk3);padding:16px}
+.m-lbl{font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.m-val{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:400;line-height:1}
+.m-trend{font-size:11px;color:var(--wh2);margin-top:4px;display:flex;align-items:center;gap:3px}
+.m-trend.dim{color:var(--wh4)}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;font-size:10px;font-weight:600;white-space:nowrap;text-transform:uppercase;letter-spacing:0.5px}
+.b-wh{background:var(--wh);color:var(--bk)}
+.b-bk{background:var(--bk3);color:var(--wh2);border:1px solid var(--bk5)}
+.b-ok{background:rgba(255,255,255,0.1);color:var(--wh2);border:1px solid rgba(255,255,255,0.2)}
+.divider{height:1px;background:var(--bk3);margin:12px 0}
+.row-item{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--bk3)}
+.row-item:last-child{border-bottom:none}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.three-col{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.tab-row{display:flex;border-bottom:1px solid var(--bk3);margin-bottom:18px;overflow-x:auto}
+.tab{padding:8px 14px;font-size:11px;cursor:pointer;color:var(--wh4);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.15s;white-space:nowrap;text-transform:uppercase;letter-spacing:0.8px}
+.tab:hover{color:var(--wh)}
+.tab.active{color:var(--wh);border-bottom-color:var(--wh)}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;font-size:11px;cursor:pointer;border:1px solid var(--bk4);color:var(--wh4);transition:all 0.15s;background:var(--bk2);white-space:nowrap;text-transform:uppercase;letter-spacing:0.5px}
+.chip:hover{border-color:var(--bk5)}
+.chip.active{border-color:var(--wh);color:var(--wh);background:var(--bk3)}
+.prog-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.prog-lbl{font-size:11px;color:var(--wh4);width:110px;flex-shrink:0;text-transform:uppercase;letter-spacing:0.4px}
+.prog-bar{flex:1;height:2px;background:var(--bk4)}
+.prog-fill{height:100%;background:var(--wh)}
+.prog-val{font-size:11px;color:var(--wh4);width:30px;text-align:right;font-family:'DM Mono',monospace}
+.ai-insight{background:var(--bk2);border-left:2px solid var(--wh);padding:10px 12px;font-size:12px;color:var(--wh2);line-height:1.65;margin-top:10px}
+.ai-insight strong{color:var(--wh)}
+
+/* ═══════════ POST CARDS ═══════════ */
+.post-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.post-card{background:var(--bk2);border:1px solid var(--bk3);padding:14px;cursor:pointer;transition:all 0.2s}
+.post-card:hover{border-color:var(--bk5);transform:translateY(-1px)}
+.post-card.sel{border-color:var(--wh)}
+.post-hook{font-size:13px;font-weight:500;line-height:1.4;margin-bottom:7px}
+.post-cap{font-size:12px;color:var(--wh4);line-height:1.55;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.post-tags{font-size:10px;color:var(--wh4);font-family:'DM Mono',monospace;margin-bottom:8px}
+.post-vis{font-size:10px;color:var(--wh4);padding:5px 8px;background:var(--bk3);margin-bottom:8px;display:flex;align-items:center;gap:4px}
+.post-acts{display:flex;gap:5px;flex-wrap:wrap}
+
+/* ═══════════ QUOTE CARD GENERATOR (ADMIN FEATURE) ═══════════ */
+.quote-canvas{background:var(--bk);border:1px solid var(--bk3);overflow:hidden;position:relative;aspect-ratio:1;width:100%;max-width:480px}
+.quote-canvas-inner{position:relative;width:100%;height:100%;display:flex;flex-direction:column;padding:28px}
+.qc-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:grayscale(100%) brightness(0.35)}
+.qc-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0.4) 100%)}
+.qc-content{position:relative;z-index:2;display:flex;flex-direction:column;height:100%;justify-content:space-between}
+.qc-profile{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.qc-avt{width:44px;height:44px;border-radius:50%;background:var(--wh4);overflow:hidden;border:2px solid rgba(255,255,255,0.3);flex-shrink:0}
+.qc-avt img{width:100%;height:100%;object-fit:cover;filter:grayscale(100%)}
+.qc-name{font-size:14px;font-weight:700;color:var(--wh);letter-spacing:0.3px}
+.qc-handle{font-size:11px;color:rgba(255,255,255,0.6)}
+.qc-quote{flex:1;display:flex;flex-direction:column;justify-content:center}
+.qc-quote-text{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;line-height:1.35;color:var(--wh);letter-spacing:0.3px}
+.qc-brand{margin-top:16px;font-size:11px;color:rgba(255,255,255,0.5);text-align:center;letter-spacing:1px;text-transform:uppercase}
+
+/* STYLE VARIANTS */
+.qs-minimal .qc-bg{display:none}
+.qs-minimal .qc-overlay{display:none}
+.qs-minimal{background:var(--bk)}
+.qs-minimal .qc-quote-text{font-size:26px;letter-spacing:2px}
+.qs-charcoal .qc-bg{display:none}
+.qs-charcoal .qc-overlay{display:none}
+.qs-charcoal{background:var(--char)}
+.qs-white .qc-bg{display:none}
+.qs-white .qc-overlay{display:none}
+.qs-white{background:var(--wh)}
+.qs-white .qc-quote-text,.qs-white .qc-name,.qs-white .qc-handle{color:var(--bk)}
+.qs-white .qc-brand{color:rgba(0,0,0,0.4)}
+
+/* PORTRAIT FORMAT */
+.qf-portrait{aspect-ratio:9/16;max-width:280px}
+.qf-portrait .qc-quote-text{font-size:18px}
+/* WIDE FORMAT */
+.qf-wide{aspect-ratio:16/9;max-width:560px}
+
+/* ═══════════ PIPELINE & AUTO-PUBLISH ═══════════ */
+.ai-engine-opt{transition:all 0.2s}
+.ai-engine-opt.active{background:var(--bk3)!important;border-bottom:2px solid var(--wh)}
+.output-mode{transition:all 0.2s}
+.output-mode.active{border-color:var(--wh)!important;background:var(--bk3)!important}
+.plat-tog{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;font-size:11px;cursor:pointer;border:1px solid var(--bk4);color:var(--wh4);transition:all 0.15s;background:var(--bk2);text-transform:uppercase;letter-spacing:0.4px}
+.plat-tog:hover{border-color:var(--bk5)}
+.plat-tog.active{border-color:var(--wh);color:var(--wh);background:var(--bk3)}
+.pipe-stage{transition:all 0.3s}
+.pipe-stage.active .pipe-stage-ic{background:var(--wh2)}
+.pipe-stage.done{opacity:0.7}
+
+
+.url-row{display:flex;gap:8px;margin-top:14px}
+.url-inp{flex:1;padding:11px 13px;background:var(--bk2);border:1px solid var(--bk4);color:var(--wh);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.2s}
+.url-inp:focus{border-color:var(--wh3)}
+.url-inp::placeholder{color:var(--wh4)}
+.p-hdr{display:flex;align-items:center;gap:14px;padding:16px;background:var(--bk2);margin-bottom:14px;border:1px solid var(--bk3);flex-wrap:wrap}
+.p-avt{width:52px;height:52px;background:var(--wh);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--bk);flex-shrink:0}
+.score-ring{width:50px;height:50px;border:2px solid var(--wh);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.sr-num{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;line-height:1}
+.sr-lbl{font-size:8px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.4px}
+.imp-card{background:var(--bk2);border:1px solid var(--bk3);padding:14px;margin-bottom:10px;border-left:2px solid var(--wh)}
+.imp-title{font-size:13px;font-weight:500;margin-bottom:4px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.imp-body{font-size:12px;color:var(--wh4);line-height:1.6;margin-bottom:9px}
+.imp-sug{font-size:12px;padding:10px 12px;background:var(--bk3);color:var(--wh2);line-height:1.65}
+.export-bar{display:flex;gap:7px;align-items:center;padding:12px 0;border-top:1px solid var(--bk3);margin-top:14px;flex-wrap:wrap}
+
+/* ═══════════ GENERATION OVERLAY ═══════════ */
+.gen-ov{position:absolute;inset:0;background:rgba(0,0,0,0.97);display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:50;padding:24px}
+.gen-ov.show{display:flex}
+.gen-count{font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:300;line-height:1;color:var(--wh)}
+.gen-stage{font-size:12px;color:var(--wh3);display:flex;align-items:center;gap:9px;width:100%;max-width:340px;text-transform:uppercase;letter-spacing:0.5px}
+.gen-stage.done{color:var(--wh)}
+.gen-stage.active{color:var(--wh)}
+.gen-stage.wait{color:var(--wh4)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:12px;height:12px;border:1.5px solid var(--bk4);border-top-color:var(--wh);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0}
+
+/* ═══════════ LEAD ENGINE ═══════════ */
+.lead-card{background:var(--bk2);border:1px solid var(--bk3);padding:14px;margin-bottom:10px;transition:border-color 0.2s}
+.lead-card:hover{border-color:var(--bk5)}
+.lead-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.lead-avt{width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;background:var(--bk4)}
+.seq-step{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--bk3)}
+.seq-step:last-child{border-bottom:none}
+.seq-num{width:22px;height:22px;background:var(--wh);color:var(--bk);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;margin-top:2px}
+
+/* CALENDAR */
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-top:10px}
+.cal-hdr{font-size:9px;text-transform:uppercase;letter-spacing:0.8px;color:var(--wh4);text-align:center;padding:4px}
+.cal-cell{min-height:68px;border:1px solid var(--bk3);padding:5px;background:var(--bk2)}
+.cal-cell.today{border-color:var(--wh2)}
+.cal-day{font-size:10px;margin-bottom:4px;color:var(--wh4)}
+.cal-cell.today .cal-day{color:var(--wh);font-weight:700}
+.cal-ev{font-size:9px;padding:2px 4px;margin-bottom:2px;font-family:'DM Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--bk4);color:var(--wh3)}
+.cal-ev.li{background:rgba(255,255,255,0.12);color:var(--wh2)}
+.cal-ev.ig{background:rgba(255,255,255,0.07);color:var(--wh3)}
+
+/* BAR CHART */
+.bar-chart{display:flex;flex-direction:column;gap:9px}
+.bar-row{display:flex;align-items:center;gap:8px}
+.bar-lbl{font-size:11px;color:var(--wh4);width:110px;flex-shrink:0;text-transform:uppercase;letter-spacing:0.4px}
+.bar-track{flex:1;height:6px;background:var(--bk3)}
+.bar-fill{height:100%;background:var(--wh)}
+.bar-val{font-size:11px;font-family:'DM Mono',monospace;color:var(--wh4);width:56px;text-align:right}
+
+/* GHOST WRITER */
+.gw-result{background:var(--bk2);border:1px solid var(--bk3);border-left:2px solid var(--wh);padding:14px;font-size:13px;line-height:1.8;color:var(--wh2);margin-top:12px;white-space:pre-wrap}
+.human-score{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;font-size:10px;font-weight:700;background:var(--wh);color:var(--bk);text-transform:uppercase;letter-spacing:1px}
+
+/* REPURPOSE */
+.rp-from{display:flex;align-items:center;gap:8px;font-size:10px;color:var(--wh4);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px}
+.rp-card{background:var(--bk2);border:1px solid var(--bk3);padding:14px;margin-bottom:10px;transition:border-color 0.2s}
+.rp-card:hover{border-color:var(--bk5)}
+
+/* ═══════════ ADMIN AGENT / QUOTE STUDIO ═══════════ */
+.admin-panel{background:var(--bk);border:1px solid var(--bk3);padding:0;overflow:hidden}
+.admin-panel-hdr{background:var(--bk2);border-bottom:1px solid var(--bk3);padding:14px 18px;display:flex;align-items:center;gap:10px}
+.admin-tag{font-size:9px;padding:2px 8px;background:var(--wh);color:var(--bk);font-weight:800;text-transform:uppercase;letter-spacing:1px}
+.quote-studio-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.qs-left{padding:20px;border-right:1px solid var(--bk3)}
+.qs-right{padding:20px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.style-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px}
+.style-opt{padding:8px;border:1px solid var(--bk4);cursor:pointer;text-align:center;font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.5px;transition:all 0.2s}
+.style-opt:hover,.style-opt.active{border-color:var(--wh);color:var(--wh)}
+.style-opt .style-preview{width:100%;height:32px;margin-bottom:6px;background:var(--bk2);border:1px solid var(--bk4)}
+
+/* QUOTE BACKGROUNDS */
+.bg-opt{width:100%;height:36px;background-size:cover;background-position:center;filter:grayscale(100%);margin-bottom:4px;cursor:pointer;border:1px solid transparent;transition:all 0.2s}
+.bg-opt.active{border-color:var(--wh)}
+.bg-opts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px}
+.bg-label{font-size:10px;color:var(--wh4);text-align:center;text-transform:uppercase;letter-spacing:0.4px}
+
+/* ═══════════ TOAST ═══════════ */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--bk2);border:1px solid var(--bk5);padding:11px 16px;font-size:12px;color:var(--wh);z-index:9999;display:flex;align-items:center;gap:9px;opacity:0;transform:translateY(8px);transition:all 0.28s;pointer-events:none;text-transform:uppercase;letter-spacing:0.5px}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ═══════════ ANALYSIS STAGES ═══════════ */
+.a-stage{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bk2);border:1px solid var(--bk3);margin-bottom:7px}
+.a-stage.done{border-left:2px solid var(--wh)}
+.a-stage.active{border-left:2px solid var(--wh3)}
+.a-stage-ic{width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--bk3)}
+
+/* ═══════════ MOBILE ═══════════ */
+@media(max-width:768px){
+  .sidebar{position:fixed;top:0;left:0;bottom:0;transform:translateX(-100%);z-index:50;transition:transform 0.3s ease}
+  .sidebar.mob-open{transform:translateX(0)}
+  .metrics-row{grid-template-columns:1fr 1fr}
+  .post-grid,.two-col,.three-col,.quote-studio-grid{grid-template-columns:1fr}
+  .land-hero-wrap{grid-template-columns:1fr;gap:40px}
+  .land-h1{font-size:42px}
+  .topbar{padding:0 14px}
+  .content-area{padding:14px}
+  .cal-grid{grid-template-columns:repeat(4,1fr)}
+  .url-row{flex-direction:column}
+  .export-bar{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:480px){
+  .land-h1{font-size:34px}
+  .metrics-row{grid-template-columns:1fr 1fr}
+  .land-stats{gap:20px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ LANDING ═══════ -->
+<div id="s-landing">
+  <div class="land-wrap" style="position:relative;z-index:1">
+    <div class="land-nav">
+      <div>
+        <div class="land-logo">Aletheia<span>hq</span></div>
+        <div style="font-size:9px;color:var(--wh4);text-transform:uppercase;letter-spacing:2px;margin-top:2px">AI Marketing Intelligence</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="btn-s" onclick="showScreen('s-login')">Sign in</button>
+        <button class="btn-s wh" onclick="showScreen('s-register')">Get started</button>
+      </div>
+    </div>
+
+    <div class="land-hero-wrap">
+      <div>
+        <!-- Quote card preview on landing -->
+        <div style="display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border:1px solid var(--bk4);font-size:10px;color:var(--wh3);margin-bottom:24px;text-transform:uppercase;letter-spacing:1px"><i data-lucide="sparkles" style="width:11px;height:11px"></i> The Authority Platform for Serious Brands</div>
+        <h1 class="land-h1">Your content.<br/><em>Your voice.</em><br/><strong>Everywhere.</strong></h1>
+        <p class="land-sub">Generate 100+ posts, optimise your social profiles, create cinematic quote graphics, and capture leads — all powered by AI that writes exactly like you. No fluff. No filler. Just authority.</p>
+        <div class="land-stats">
+          <div><div class="s-num">100+</div><div class="s-lbl">Posts per run</div></div>
+          <div><div class="s-num">8</div><div class="s-lbl">Platforms</div></div>
+          <div><div class="s-num">&lt;2min</div><div class="s-lbl">Generation</div></div>
+          <div><div class="s-num">$0</div><div class="s-lbl">Writer cost</div></div>
+        </div>
+        <div class="feats-list">
+          <div class="feat-row"><i data-lucide="check" style="width:13px;height:13px"></i> Website analysis — 100+ platform-specific posts in under 2 minutes</div>
+          <div class="feat-row"><i data-lucide="check" style="width:13px;height:13px"></i> LinkedIn & social profile optimizer with full PDF export</div>
+          <div class="feat-row"><i data-lucide="check" style="width:13px;height:13px"></i> Quote Card Studio — cinematic black & white graphics in seconds</div>
+          <div class="feat-row"><i data-lucide="check" style="width:13px;height:13px"></i> Ghost Writer — AI voice so human, detectors score it 99% organic</div>
+          <div class="feat-row"><i data-lucide="check" style="width:13px;height:13px"></i> Repurpose Engine — 1 idea becomes 8 platform-native posts</div>
+          <div class="feat-row"><i data-lucide="check" style="width:13px;height:13px"></i> Lead Engine — pipeline, sequences, and lead magnets built in</div>
+        </div>
+      </div>
+      <div>
+        <!-- Live quote card preview -->
+        <div style="margin-bottom:16px">
+          <div class="quote-canvas" style="max-width:340px;margin:0 auto">
+            <div class="quote-canvas-inner">
+              <div class="qc-bg" style="background-image:url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&q=80&grayscale')"></div>
+              <div class="qc-overlay"></div>
+              <div class="qc-content">
+                <div class="qc-profile">
+                  <div class="qc-avt" style="background:var(--wh2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--bk)">FA</div>
+                  <div><div class="qc-name">Your Name</div><div class="qc-handle">@yourhandle</div></div>
+                </div>
+                <div class="qc-quote">
+                  <div class="qc-quote-text">"You don't need more time, you need less waste."</div>
+                </div>
+                <div class="qc-brand">@AletheiaHQ · aletheiahq</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="land-box">
+          <h2>Choose your plan</h2>
+          <p>14-day money-back guarantee · Cancel anytime</p>
+
+          <!-- BILLING TOGGLE -->
+          <div style="display:flex;align-items:center;gap:0;margin-bottom:18px;background:var(--bk2);border:1px solid var(--bk4);width:fit-content">
+            <div id="tog-monthly" onclick="setBilling('monthly')" style="padding:7px 18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;cursor:pointer;background:var(--wh);color:var(--bk);transition:all 0.2s">Monthly</div>
+            <div id="tog-annual" onclick="setBilling('annual')" style="padding:7px 18px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;cursor:pointer;color:var(--wh4);transition:all 0.2s;display:flex;align-items:center;gap:6px">Annual <span style="background:var(--wh);color:var(--bk);font-size:9px;padding:1px 6px;font-weight:800;letter-spacing:0.5px">SAVE 25%</span></div>
+          </div>
+
+          <div class="plan-cards">
+            <!-- STARTER -->
+            <div class="pc" id="pc-s" onclick="selPlan('starter')">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                <div>
+                  <div class="pc-name">Starter</div>
+                  <div class="pc-feats">1 project · 100 posts/mo · CSV export</div>
+                </div>
+                <div style="text-align:right">
+                  <div class="pc-price" id="price-starter">$29<span>/mo</span></div>
+                  <div id="annual-note-starter" style="display:none;font-size:10px;color:var(--wh4);margin-top:2px">$261 billed annually</div>
+                </div>
+              </div>
+            </div>
+            <!-- GROWTH -->
+            <div class="pc sel" id="pc-g" onclick="selPlan('growth')">
+              <div class="pc-pop">Most popular</div>
+              <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                <div>
+                  <div class="pc-name">Growth</div>
+                  <div class="pc-feats">5 projects · 500 posts · PDF · Quote Studio · Ghost Writer</div>
+                </div>
+                <div style="text-align:right">
+                  <div class="pc-price" id="price-growth">$79<span>/mo</span></div>
+                  <div id="annual-note-growth" style="display:none;font-size:10px;color:var(--wh4);margin-top:2px">$711 billed annually</div>
+                </div>
+              </div>
+            </div>
+            <!-- AGENCY -->
+            <div class="pc" id="pc-a" onclick="selPlan('agency')">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                <div>
+                  <div class="pc-name">Agency</div>
+                  <div class="pc-feats">25 projects · 2,500 posts · White label · Team</div>
+                </div>
+                <div style="text-align:right">
+                  <div class="pc-price" id="price-agency">$199<span>/mo</span></div>
+                  <div id="annual-note-agency" style="display:none;font-size:10px;color:var(--wh4);margin-top:2px">$1,791 billed annually</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SAVINGS CALLOUT — shows on annual -->
+          <div id="savings-bar" style="display:none;padding:10px 12px;background:var(--bk2);border:1px solid var(--bk4);margin-bottom:14px;font-size:11px;color:var(--wh2);display:none;align-items:center;gap:8px">
+            <i data-lucide="tag" style="width:13px;height:13px;flex-shrink:0"></i>
+            Annual billing saves you up to <strong style="color:var(--wh)">$597/year</strong> on the Growth plan — that is 3 months free.
+          </div>
+
+          <button class="btn-wh" onclick="showScreen('s-register')"><i data-lucide="arrow-right" style="width:14px;height:14px"></i> Create account — Start today</button>
+          <button class="btn-bk" onclick="showScreen('s-login')"><i data-lucide="log-in" style="width:13px;height:13px"></i> Sign in to existing account</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="port-footer">
+      <div style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:1px">Your Business Portfolio</div>
+      <div class="port-links">
+        <a href="https://asamoahgroup.com" target="_blank" class="port-link"><i data-lucide="external-link" style="width:11px;height:11px"></i> asamoahgroup.com</a>
+        <a href="https://carebridgeos.care" target="_blank" class="port-link"><i data-lucide="external-link" style="width:11px;height:11px"></i> carebridgeos.care</a>
+        <a href="https://northbridgeconcierge.com" target="_blank" class="port-link"><i data-lucide="external-link" style="width:11px;height:11px"></i> northbridgeconcierge.com</a>
+      </div>
+      <div style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:1px">© 2026 Aletheiahq</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ LOGIN ═══════ -->
+<div id="s-login">
+  <div style="position:relative;z-index:1;padding:20px">
+    <div class="auth-box">
+      <div class="auth-logo">Aletheiahq</div>
+      <div class="auth-sub">Sign in to your account</div>
+      <!-- ADMIN PASS HINT -->
+      <div class="admin-hint"><i data-lucide="shield" style="width:13px;height:13px"></i> <div><strong>Developer / Admin access:</strong> Use email <code>info@asamoahgroup.com</code> — password <code>KWADWO1717</code></div></div>
+      <div class="f-grp"><label class="f-lbl">Email</label><input class="f-inp" id="li-em" placeholder="your@email.com" placeholder="your@email.com"/></div>
+      <div class="f-grp"><label class="f-lbl">Password</label><input class="f-inp" id="li-pw" type="password" placeholder="••••••••" placeholder="••••••••"/></div>
+      <button class="btn-wh" onclick="doLogin()" style="margin-bottom:8px"><i data-lucide="arrow-right" style="width:14px;height:14px"></i> Sign in</button>
+      <div class="auth-divider">No account? <span class="auth-link" onclick="showScreen('s-register')">Create one</span></div>
+      <div style="text-align:center"><span class="auth-link" style="font-size:11px" onclick="showScreen('s-landing')">← Back</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ REGISTER ═══════ -->
+<div id="s-register">
+  <div style="position:relative;z-index:1;padding:20px">
+    <div class="auth-box">
+      <div class="auth-logo">Aletheiahq</div>
+      <div class="auth-sub">Create your account</div>
+      <div class="f-grp"><label class="f-lbl">Full name</label><input class="f-inp" placeholder="Your full name" placeholder="Your name"/></div>
+      <div class="f-grp"><label class="f-lbl">Email</label><input class="f-inp" type="email" placeholder="your@email.com" placeholder="you@company.com"/></div>
+      <div class="f-grp"><label class="f-lbl">Password</label><input class="f-inp" type="password" placeholder="Min. 8 characters"/></div>
+      <div class="f-grp"><label class="f-lbl">Organisation</label><input class="f-inp" value="" placeholder="Your business name"/></div>
+      <div style="display:flex;gap:7px;padding:10px 12px;background:var(--bk2);border:1px solid var(--bk3);margin-bottom:16px">
+        <i data-lucide="lock" style="width:13px;height:13px;flex-shrink:0;margin-top:1px;color:var(--wh2)"></i>
+        <span style="font-size:11px;color:var(--wh4);line-height:1.6">Data encrypted. Card details handled entirely by Stripe — never seen by us.</span>
+      </div>
+      <button class="btn-wh" onclick="showScreen('s-payment')"><i data-lucide="credit-card" style="width:14px;height:14px"></i> Continue to payment</button>
+      <div class="auth-divider">Have an account? <span class="auth-link" onclick="showScreen('s-login')">Sign in</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ PAYMENT ═══════ -->
+<div id="s-payment">
+  <div style="position:relative;z-index:1;padding:20px">
+    <div class="auth-box" style="max-width:500px">
+      <div class="auth-logo">Secure Checkout</div>
+      <div class="auth-sub">Stripe — card details never touch our servers</div>
+      <div class="pay-plan-row">
+        <div>
+          <div style="font-size:13px;font-weight:500" id="pp-n">Growth Plan</div>
+          <div style="font-size:11px;color:var(--wh4)" id="pp-billing-note">Monthly · Cancel anytime · 14-day guarantee</div>
+          <div id="pp-annual-saving" style="display:none;font-size:10px;color:var(--wh2);margin-top:3px;font-weight:600">You save $237 vs monthly billing</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600" id="pp-p">$79<span style="font-size:13px;font-weight:300;color:var(--wh4);font-family:'DM Sans',sans-serif">/mo</span></div>
+          <div id="pp-total-note" style="display:none;font-size:10px;color:var(--wh4);margin-top:2px">$711 total today</div>
+        </div>
+      </div>
+      <div class="f-grp"><label class="f-lbl">Cardholder name</label><input class="f-inp" placeholder="Your full name"/></div>
+      <div class="f-grp"><label class="f-lbl">Card number</label><input class="f-inp" placeholder="1234 5678 9012 3456"/></div>
+      <div class="cc-grid"><div class="f-grp"><label class="f-lbl">Expiry</label><input class="f-inp" placeholder="MM / YY"/></div><div class="f-grp"><label class="f-lbl">CVC</label><input class="f-inp" type="password" placeholder="•••"/></div></div>
+      <button class="btn-wh" onclick="goConfirm()" id="pay-btn"><i data-lucide="shield-check" style="width:14px;height:14px"></i> <span id="pay-txt">Pay $79.00 — Secured by Stripe</span></button>
+      <div style="display:flex;align-items:center;justify-content:center;gap:6px;font-size:10px;color:var(--wh4);margin-top:10px;text-transform:uppercase;letter-spacing:0.5px"><i data-lucide="lock" style="width:11px;height:11px"></i> 256-bit SSL · PCI Level 1</div>
+      <div style="text-align:center;margin-top:10px"><span class="auth-link" style="font-size:11px" onclick="showScreen('s-register')">← Back</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ CONFIRM ═══════ -->
+<div id="s-confirm">
+  <div style="text-align:center;max-width:380px;padding:24px;position:relative;z-index:1">
+    <div class="confirm-ic"><i data-lucide="check" style="width:28px;height:28px"></i></div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;margin-bottom:10px;letter-spacing:1px">You're in.</div>
+    <p style="font-size:14px;color:var(--wh3);line-height:1.85;margin-bottom:24px;font-weight:300">Your account is active. Content generation, profile analysis, Quote Studio, and your AI Agent are all ready. Let's build something people cannot ignore.</p>
+    <button class="btn-wh" style="max-width:280px;margin:0 auto" onclick="goApp()"><i data-lucide="layout-dashboard" style="width:14px;height:14px"></i> Enter dashboard</button>
+    <div style="margin-top:12px;font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.8px">Receipt sent to your registered email</div>
+  </div>
+</div>
+
+<!-- ═══════ APP ═══════ -->
+<div id="s-app">
+  <div class="sidebar" id="sidebar">
+    <div class="s-hdr">
+      <div><div class="s-wm">Aletheiahq</div><div class="s-tag">AI Marketing OS</div></div>
+      <button class="icon-btn" onclick="toggleSidebar()" style="flex-shrink:0"><i data-lucide="panel-left" style="width:13px;height:13px"></i></button>
+    </div>
+    <div class="s-nav">
+      <div class="nav-sec">Workspace</div>
+      <div class="nav-btn active" onclick="showPage('dashboard',this)"><i data-lucide="layout-dashboard" class="nav-icon"></i><span class="nav-lbl">Dashboard</span></div>
+      <div class="nav-btn" onclick="showPage('pipeline',this)" style="border-left:2px solid rgba(255,255,255,0.3)"><i data-lucide="rocket" class="nav-icon"></i><span class="nav-lbl">1-Min Pipeline</span><span class="nav-badge" style="background:var(--wh);color:var(--bk)">HOT</span></div>
+      <div class="nav-btn" onclick="showPage('autopublish',this)"><i data-lucide="send" class="nav-icon"></i><span class="nav-lbl">Auto-Publish</span><span class="nav-badge">NEW</span></div>
+      <div class="nav-btn" onclick="showPage('generate',this)"><i data-lucide="zap" class="nav-icon"></i><span class="nav-lbl">Generate</span></div>
+      <div class="nav-btn" onclick="showPage('posts',this)"><i data-lucide="newspaper" class="nav-icon"></i><span class="nav-lbl">Post Library</span><span class="nav-badge">114</span></div>
+      <div class="nav-btn" onclick="showPage('analyzer',this)"><i data-lucide="scan-search" class="nav-icon"></i><span class="nav-lbl">Profile Analyzer</span></div>
+      <div class="nav-btn" onclick="showPage('repurpose',this)"><i data-lucide="refresh-cw" class="nav-icon"></i><span class="nav-lbl">Repurpose Engine</span></div>
+      <div class="nav-btn" onclick="showPage('ghostwriter',this)"><i data-lucide="ghost" class="nav-icon"></i><span class="nav-lbl">Ghost Writer</span></div>
+      <div class="nav-btn" onclick="showPage('leads',this)"><i data-lucide="users" class="nav-icon"></i><span class="nav-lbl">Lead Engine</span><span class="nav-badge">67</span></div>
+      <div class="nav-btn" onclick="showPage('manager',this)"><i data-lucide="bot" class="nav-icon"></i><span class="nav-lbl">AI Manager</span></div>
+      <div class="nav-sec">Reporting</div>
+      <div class="nav-btn" onclick="showPage('calendar',this)"><i data-lucide="calendar-days" class="nav-icon"></i><span class="nav-lbl">Calendar</span></div>
+      <div class="nav-btn" onclick="showPage('analytics',this)"><i data-lucide="bar-chart-3" class="nav-icon"></i><span class="nav-lbl">Analytics</span></div>
+      <div class="nav-sec" id="admin-section" style="display:none">Admin</div>
+      <div class="nav-btn admin-nav" id="nav-quotestudio" onclick="showPage('quotestudio',this)" style="display:none"><i data-lucide="image" class="nav-icon"></i><span class="nav-lbl">Quote Studio</span><span class="nav-badge">ADMIN</span></div>
+      <div class="nav-btn admin-nav" id="nav-agent" onclick="showPage('agent',this)" style="display:none"><i data-lucide="cpu" class="nav-icon"></i><span class="nav-lbl">Aletheiahq Agent</span><span class="nav-badge">ADMIN</span></div>
+      <div class="nav-btn" onclick="showPage('settings',this)"><i data-lucide="settings" class="nav-icon"></i><span class="nav-lbl">Settings</span></div>
+    </div>
+    <div class="plan-area">
+      <div class="p-lbl" id="sidebar-plan-lbl">Growth Plan</div>
+      <div class="p-use" id="sidebar-plan-use">342 / 500 posts</div>
+      <div class="p-bar"><div class="p-fill" style="width:68%" id="sidebar-plan-bar"></div></div>
+    </div>
+    <div class="s-user">
+      <div class="u-avt" id="s-avt">FA</div>
+      <div class="u-info"><div class="u-name" id="s-uname" id="s-uname">Demo User</div><div class="u-email" id="s-uemail">demo@yourbusiness.com</div></div>
+    </div>
+  </div>
+
+  <div class="main-area">
+    <div id="mob-ov" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:49" onclick="closeMob()"></div>
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:10px;min-width:0">
+        <button class="icon-btn" id="mob-btn" style="display:none" onclick="openMob()"><i data-lucide="menu" style="width:14px;height:14px"></i></button>
+        <div class="tb-title" id="page-title">Dashboard</div>
+        <div id="admin-crown" style="display:none"><span class="admin-tag" style="font-size:8px">ADMIN</span></div>
+      </div>
+      <div class="tb-right">
+        <button class="icon-btn" title="Notifications" style="position:relative"><i data-lucide="bell" style="width:13px;height:13px"></i><div class="notif-dot"></div></button>
+        <button class="icon-btn" title="Search"><i data-lucide="search" style="width:13px;height:13px"></i></button>
+        <button class="btn-s wh" onclick="showPage('generate',document.querySelectorAll('.nav-btn')[1])"><i data-lucide="zap" style="width:12px;height:12px"></i> Campaign</button>
+        <button class="btn-s" onclick="signOut()" title="Sign out"><i data-lucide="log-out" style="width:12px;height:12px"></i></button>
+      </div>
+    </div>
+
+    <div class="content-area">
+
+      <!-- ══ DASHBOARD ══ -->
+      <div class="page active" id="page-dashboard">
+        <div class="metrics-row">
+          <div class="m-box"><div class="m-lbl"><i data-lucide="newspaper" style="width:11px;height:11px"></i> Posts</div><div class="m-val">342</div><div class="m-trend"><i data-lucide="trending-up" style="width:11px;height:11px"></i> +128 this week</div></div>
+          <div class="m-box"><div class="m-lbl"><i data-lucide="users" style="width:11px;height:11px"></i> Leads</div><div class="m-val">67</div><div class="m-trend"><i data-lucide="trending-up" style="width:11px;height:11px"></i> +14 this week</div></div>
+          <div class="m-box"><div class="m-lbl"><i data-lucide="eye" style="width:11px;height:11px"></i> Est. Reach</div><div class="m-val">12.4K</div><div class="m-trend"><i data-lucide="trending-up" style="width:11px;height:11px"></i> +2.1K</div></div>
+          <div class="m-box"><div class="m-lbl"><i data-lucide="target" style="width:11px;height:11px"></i> Score</div><div class="m-val">78<span style="font-size:14px;font-weight:300;color:var(--wh4)">/100</span></div><div class="m-trend dim">AI-optimised</div></div>
+        </div>
+        <div class="two-col">
+          <div class="card">
+            <div class="card-t"><i data-lucide="zap" style="width:15px;height:15px"></i> Recent Campaigns</div>
+            <div class="card-sub">Latest generation runs</div>
+            <div class="row-item"><div><div style="font-size:13px;font-weight:500">Your Business — Oct Campaign</div><div style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.5px">Strategy & Operations · 8 platforms</div></div><span class="badge b-ok">114 posts</span></div>
+            <div class="row-item"><div><div style="font-size:13px;font-weight:500">CareBridge OS Launch</div><div style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.5px">Healthcare SaaS · 6 platforms</div></div><span class="badge b-ok">108 posts</span></div>
+            <div class="row-item"><div><div style="font-size:13px;font-weight:500">NorthBridge Concierge</div><div style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.5px">Concierge · 5 platforms</div></div><span class="badge b-bk">Generating</span></div>
+          </div>
+          <div class="card">
+            <div class="card-t"><i data-lucide="flame" style="width:15px;height:15px"></i> Hot Leads</div>
+            <div class="card-sub">Highest intent contacts</div>
+            <div class="row-item"><div style="display:flex;align-items:center;gap:9px"><div class="lead-avt">AM</div><div><div style="font-size:13px;font-weight:500">Alex Morgan</div><div style="font-size:10px;color:var(--wh4)">Investor · LinkedIn reply</div></div></div><span class="badge b-wh">Hot</span></div>
+            <div class="row-item"><div style="display:flex;align-items:center;gap:9px"><div class="lead-avt">JW</div><div><div style="font-size:13px;font-weight:500">Jordan Williams</div><div style="font-size:10px;color:var(--wh4)">Pinnacle Realty · 3 clicks</div></div></div><span class="badge b-ok">Warm</span></div>
+            <div class="row-item"><div style="display:flex;align-items:center;gap:9px"><div class="lead-avt">TB</div><div><div style="font-size:13px;font-weight:500">Taylor Bennett</div><div style="font-size:10px;color:var(--wh4)">Healthcare Director · Profile view</div></div></div><span class="badge b-bk">New</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-t"><i data-lucide="bot" style="width:15px;height:15px"></i> AI Manager — Today's Actions</div>
+          <div class="card-sub">Ranked by revenue impact</div>
+          <div class="three-col">
+            <div style="padding:12px;background:var(--bk2);border:1px solid var(--bk3)"><div style="font-size:10px;font-weight:700;color:var(--wh);margin-bottom:5px;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:0.5px"><i data-lucide="clock" style="width:11px;height:11px"></i> Post now</div><div style="font-size:12px;color:var(--wh3);line-height:1.6">LinkedIn 9–10am. 3 posts queued. Est. 340 impressions.</div></div>
+            <div style="padding:12px;background:var(--bk2);border:1px solid var(--bk3)"><div style="font-size:10px;font-weight:700;color:var(--wh);margin-bottom:5px;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:0.5px"><i data-lucide="mail" style="width:11px;height:11px"></i> Follow up</div><div style="font-size:12px;color:var(--wh3);line-height:1.6">Alex Morgan — 5 days silent. Send value-first DM. Draft ready.</div></div>
+            <div style="padding:12px;background:var(--bk2);border:1px solid var(--bk3)"><div style="font-size:10px;font-weight:700;color:var(--wh);margin-bottom:5px;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:0.5px"><i data-lucide="trending-up" style="width:11px;height:11px"></i> Opportunity</div><div style="font-size:12px;color:var(--wh3);line-height:1.6">Objection posts get 2.4× more leads for consultants. Generate 5 today.</div></div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ══════════════════════════════════════════ -->
+      <!-- ══ 1-MINUTE PIPELINE ══ -->
+      <!-- ══════════════════════════════════════════ -->
+      <div class="page" id="page-pipeline">
+        <div style="max-width:700px">
+
+          <!-- HERO HEADER -->
+          <div style="margin-bottom:20px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+              <div style="padding:4px 10px;background:var(--wh);color:var(--bk);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase">NEW</div>
+              <span style="font-size:11px;color:var(--wh4);text-transform:uppercase;letter-spacing:1px">Fastest path to published content</span>
+            </div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;line-height:1.1;margin-bottom:8px">Paste URL. Get 100+ posts.<br/><em>Go live in 60 seconds.</em></div>
+            <div style="font-size:13px;color:var(--wh4);line-height:1.7">Drop your website URL below. Aletheiahq reads your entire site, understands your business, writes 100+ posts for every platform, and either publishes them automatically or gives you a one-click download package — all powered by OpenAI and Claude working together in under 60 seconds.</div>
+          </div>
+
+          <!-- HOW IT WORKS STRIP -->
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--bk3);margin-bottom:20px;border:1px solid var(--bk3)">
+            <div style="background:var(--bk1);padding:14px;text-align:center">
+              <i data-lucide="link" style="width:18px;height:18px;margin-bottom:6px;color:var(--wh2)"></i>
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:var(--wh4);margin-bottom:3px">Step 1</div>
+              <div style="font-size:12px;font-weight:600;color:var(--wh)">Paste URL</div>
+              <div style="font-size:10px;color:var(--wh4);margin-top:3px">Any public website</div>
+            </div>
+            <div style="background:var(--bk1);padding:14px;text-align:center">
+              <i data-lucide="brain" style="width:18px;height:18px;margin-bottom:6px;color:var(--wh2)"></i>
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:var(--wh4);margin-bottom:3px">Step 2</div>
+              <div style="font-size:12px;font-weight:600;color:var(--wh)">AI Reads Site</div>
+              <div style="font-size:10px;color:var(--wh4);margin-top:3px">OpenAI + Claude</div>
+            </div>
+            <div style="background:var(--bk1);padding:14px;text-align:center">
+              <i data-lucide="newspaper" style="width:18px;height:18px;margin-bottom:6px;color:var(--wh2)"></i>
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:var(--wh4);margin-bottom:3px">Step 3</div>
+              <div style="font-size:12px;font-weight:600;color:var(--wh)">100+ Posts</div>
+              <div style="font-size:10px;color:var(--wh4);margin-top:3px">All 8 platforms</div>
+            </div>
+            <div style="background:var(--bk1);padding:14px;text-align:center">
+              <i data-lucide="send" style="width:18px;height:18px;margin-bottom:6px;color:var(--wh2)"></i>
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:var(--wh4);margin-bottom:3px">Step 4</div>
+              <div style="font-size:12px;font-weight:600;color:var(--wh)">Publish or Download</div>
+              <div style="font-size:10px;color:var(--wh4);margin-top:3px">Auto or manual</div>
+            </div>
+          </div>
+
+          <!-- MAIN INPUT CARD -->
+          <div class="card" id="pipeline-form">
+            <div class="card-t"><i data-lucide="rocket" style="width:16px;height:16px"></i> 1-Minute Pipeline</div>
+            <div class="card-sub">Your URL → 100+ posts → published or downloaded in under 60 seconds</div>
+
+            <!-- URL INPUT — the star of the show -->
+            <div style="margin-bottom:16px">
+              <label class="f-lbl">Website URL — paste and go</label>
+              <div style="display:flex;gap:0;border:1px solid var(--bk4);background:var(--bk2)">
+                <div style="padding:0 12px;display:flex;align-items:center;border-right:1px solid var(--bk4)"><i data-lucide="globe" style="width:14px;height:14px;color:var(--wh4)"></i></div>
+                <input id="pipe-url" class="f-inp" style="border:none;background:transparent;flex:1" placeholder="https://yourbusiness.com" oninput="pipeUrlChanged(this.value)"/>
+                <div id="pipe-url-check" style="padding:0 12px;display:flex;align-items:center;display:none"><i data-lucide="check-circle" style="width:14px;height:14px;color:var(--wh2)"></i></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+                <div id="pipe-url-status" style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.5px">Enter any public website URL to begin</div>
+              </div>
+            </div>
+
+            <!-- AI ENGINE SELECTOR -->
+            <div style="margin-bottom:16px">
+              <label class="f-lbl">AI Engine</label>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--bk4);border:1px solid var(--bk4)">
+                <div class="ai-engine-opt active" id="eng-openai" onclick="selectEngine('openai',this)" style="background:var(--bk2);padding:12px;cursor:pointer;text-align:center;border-right:1px solid var(--bk4)">
+                  <div style="font-size:12px;font-weight:600;color:var(--wh);margin-bottom:2px">OpenAI GPT-4o</div>
+                  <div style="font-size:10px;color:var(--wh4)">Fastest · Most detailed</div>
+                  <div style="font-size:9px;color:var(--wh4);margin-top:3px;text-transform:uppercase;letter-spacing:0.5px">Requires API key</div>
+                </div>
+                <div class="ai-engine-opt" id="eng-claude" onclick="selectEngine('claude',this)" style="background:var(--bk2);padding:12px;cursor:pointer;text-align:center;border-right:1px solid var(--bk4)">
+                  <div style="font-size:12px;font-weight:600;color:var(--wh);margin-bottom:2px">Anthropic Claude</div>
+                  <div style="font-size:10px;color:var(--wh4)">Most human · Best hooks</div>
+                  <div style="font-size:9px;color:var(--wh4);margin-top:3px;text-transform:uppercase;letter-spacing:0.5px">Requires API key</div>
+                </div>
+                <div class="ai-engine-opt" id="eng-both" onclick="selectEngine('both',this)" style="background:var(--bk2);padding:12px;cursor:pointer;text-align:center">
+                  <div style="font-size:12px;font-weight:600;color:var(--wh);margin-bottom:2px">Both Engines</div>
+                  <div style="font-size:10px;color:var(--wh4)">Best of both · 200+ posts</div>
+                  <div style="font-size:9px;color:var(--wh4);margin-top:3px;text-transform:uppercase;letter-spacing:0.5px">Recommended</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- OUTPUT MODE -->
+            <div style="margin-bottom:16px">
+              <label class="f-lbl">After generation — what should happen?</label>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+                <div class="output-mode active" id="mode-review" onclick="selectMode('review',this)" style="border:1px solid var(--wh);background:var(--bk3);padding:12px;cursor:pointer">
+                  <i data-lucide="eye" style="width:14px;height:14px;margin-bottom:5px"></i>
+                  <div style="font-size:11px;font-weight:600;color:var(--wh)">Review first</div>
+                  <div style="font-size:10px;color:var(--wh4);margin-top:2px;line-height:1.4">I approve each post before it goes live</div>
+                </div>
+                <div class="output-mode" id="mode-auto" onclick="selectMode('auto',this)" style="border:1px solid var(--bk4);background:var(--bk2);padding:12px;cursor:pointer">
+                  <i data-lucide="zap" style="width:14px;height:14px;margin-bottom:5px;color:var(--wh4)"></i>
+                  <div style="font-size:11px;font-weight:600;color:var(--wh4)">Auto-publish</div>
+                  <div style="font-size:10px;color:var(--wh4);margin-top:2px;line-height:1.4">Publish to connected platforms automatically</div>
+                </div>
+                <div class="output-mode" id="mode-download" onclick="selectMode('download',this)" style="border:1px solid var(--bk4);background:var(--bk2);padding:12px;cursor:pointer">
+                  <i data-lucide="download" style="width:14px;height:14px;margin-bottom:5px;color:var(--wh4)"></i>
+                  <div style="font-size:11px;font-weight:600;color:var(--wh4)">Download package</div>
+                  <div style="font-size:10px;color:var(--wh4);margin-top:2px;line-height:1.4">Get CSV + PDF + calendar instantly</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PLATFORM SELECT -->
+            <div style="margin-bottom:16px">
+              <label class="f-lbl">Platforms to generate for</label>
+              <div style="display:flex;flex-wrap:wrap;gap:6px" id="platform-toggles">
+                <div class="plat-tog active" data-plat="linkedin" onclick="togglePlat(this)"><i data-lucide="linkedin" style="width:11px;height:11px"></i> LinkedIn</div>
+                <div class="plat-tog active" data-plat="instagram" onclick="togglePlat(this)"><i data-lucide="instagram" style="width:11px;height:11px"></i> Instagram</div>
+                <div class="plat-tog active" data-plat="facebook" onclick="togglePlat(this)"><i data-lucide="facebook" style="width:11px;height:11px"></i> Facebook</div>
+                <div class="plat-tog active" data-plat="x" onclick="togglePlat(this)"><i data-lucide="twitter" style="width:11px;height:11px"></i> X</div>
+                <div class="plat-tog active" data-plat="tiktok" onclick="togglePlat(this)"><i data-lucide="video" style="width:11px;height:11px"></i> TikTok</div>
+                <div class="plat-tog active" data-plat="youtube" onclick="togglePlat(this)"><i data-lucide="youtube" style="width:11px;height:11px"></i> YouTube</div>
+                <div class="plat-tog active" data-plat="threads" onclick="togglePlat(this)"><i data-lucide="message-circle" style="width:11px;height:11px"></i> Threads</div>
+                <div class="plat-tog active" data-plat="google" onclick="togglePlat(this)"><i data-lucide="map-pin" style="width:11px;height:11px"></i> Google</div>
+              </div>
+            </div>
+
+            <!-- SCHEDULE -->
+            <div style="margin-bottom:16px">
+              <label class="f-lbl">Post schedule (for auto-publish)</label>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div>
+                  <select class="f-inp" id="pipe-freq">
+                    <option>Spread over 30 days (recommended)</option>
+                    <option>3 posts per week</option>
+                    <option>1 post per day</option>
+                    <option>2 posts per day</option>
+                    <option>All at once (bulk)</option>
+                  </select>
+                </div>
+                <div>
+                  <select class="f-inp">
+                    <option>Best AI-predicted time per platform</option>
+                    <option>9:00 AM daily</option>
+                    <option>12:00 PM daily</option>
+                    <option>6:00 PM daily</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- MAIN CTA -->
+            <button class="btn-wh" id="pipe-btn" onclick="runPipeline()" style="font-size:14px;padding:14px 24px;letter-spacing:0.5px">
+              <i data-lucide="rocket" style="width:15px;height:15px"></i>
+              Run 1-Minute Pipeline
+            </button>
+            <div style="display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap">
+              <div style="font-size:10px;color:var(--wh4);display:flex;align-items:center;gap:4px"><i data-lucide="shield" style="width:11px;height:11px"></i> Secure crawler</div>
+              <div style="font-size:10px;color:var(--wh4);display:flex;align-items:center;gap:4px"><i data-lucide="clock" style="width:11px;height:11px"></i> Under 60 seconds</div>
+              <div style="font-size:10px;color:var(--wh4);display:flex;align-items:center;gap:4px"><i data-lucide="eye-off" style="width:11px;height:11px"></i> Never trains AI models</div>
+            </div>
+          </div>
+
+          <!-- PIPELINE RUNNING STATE -->
+          <div id="pipeline-running" style="display:none">
+            <div class="card" style="text-align:center;padding:32px 20px">
+              <!-- LIVE COUNTER -->
+              <div style="font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:300;line-height:1;color:var(--wh);margin-bottom:4px" id="pipe-count">0</div>
+              <div style="font-size:11px;color:var(--wh4);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:28px">posts generated</div>
+
+              <!-- STAGE PROGRESS -->
+              <div style="max-width:420px;margin:0 auto;text-align:left">
+                <div class="pipe-stage" id="ps1" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bk3)">
+                  <div id="ps1-ic" style="width:28px;height:28px;background:var(--bk3);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="globe" style="width:14px;height:14px;color:var(--wh4)"></i></div>
+                  <div><div style="font-size:12px;font-weight:500">Reading website</div><div style="font-size:10px;color:var(--wh4)" id="ps1-sub">Fetching pages, extracting content...</div></div>
+                  <div id="ps1-status" style="margin-left:auto;font-size:10px;color:var(--wh4);text-transform:uppercase">Waiting</div>
+                </div>
+                <div class="pipe-stage" id="ps2" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bk3)">
+                  <div id="ps2-ic" style="width:28px;height:28px;background:var(--bk3);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="brain" style="width:14px;height:14px;color:var(--wh4)"></i></div>
+                  <div><div style="font-size:12px;font-weight:500">AI understanding your business</div><div style="font-size:10px;color:var(--wh4)" id="ps2-sub">Industry, audience, services, voice...</div></div>
+                  <div id="ps2-status" style="margin-left:auto;font-size:10px;color:var(--wh4);text-transform:uppercase">Waiting</div>
+                </div>
+                <div class="pipe-stage" id="ps3" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bk3)">
+                  <div id="ps3-ic" style="width:28px;height:28px;background:var(--bk3);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="newspaper" style="width:14px;height:14px;color:var(--wh4)"></i></div>
+                  <div><div style="font-size:12px;font-weight:500">Writing 100+ posts</div><div style="font-size:10px;color:var(--wh4)" id="ps3-sub">Platform-specific hooks, captions, CTAs...</div></div>
+                  <div id="ps3-status" style="margin-left:auto;font-size:10px;color:var(--wh4);text-transform:uppercase">Waiting</div>
+                </div>
+                <div class="pipe-stage" id="ps4" style="display:flex;align-items:center;gap:12px;padding:10px 0">
+                  <div id="ps4-ic" style="width:28px;height:28px;background:var(--bk3);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="send" style="width:14px;height:14px;color:var(--wh4)"></i></div>
+                  <div><div style="font-size:12px;font-weight:500">Publishing or packaging</div><div style="font-size:10px;color:var(--wh4)" id="ps4-sub">Scheduling, CSV, PDF, calendar...</div></div>
+                  <div id="ps4-status" style="margin-left:auto;font-size:10px;color:var(--wh4);text-transform:uppercase">Waiting</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PIPELINE COMPLETE STATE -->
+          <div id="pipeline-done" style="display:none">
+            <div class="card">
+              <!-- SUCCESS HEADER -->
+              <div style="display:flex;align-items:center;gap:12px;padding:16px;background:var(--bk2);margin:-18px -18px 18px -18px;border-bottom:1px solid var(--bk3)">
+                <div style="width:40px;height:40px;background:var(--wh);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="check" style="width:20px;height:20px;color:var(--bk)"></i></div>
+                <div>
+                  <div style="font-size:15px;font-weight:600;color:var(--wh)">Pipeline complete — <span id="done-count">114</span> posts ready</div>
+                  <div style="font-size:11px;color:var(--wh4);margin-top:2px">Generated in <span id="done-time">47</span> seconds · 8 platforms · Lead hooks included</div>
+                </div>
+              </div>
+
+              <!-- WHAT HAPPENED -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+                <div style="padding:12px;background:var(--bk2);border:1px solid var(--bk3)">
+                  <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.6px;color:var(--wh4);margin-bottom:6px">Business profile extracted</div>
+                  <div style="font-size:12px;color:var(--wh2);line-height:1.6" id="done-profile">Industry · Target audience · Brand voice · Services · Pain points · Value proposition</div>
+                </div>
+                <div style="padding:12px;background:var(--bk2);border:1px solid var(--bk3)">
+                  <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.6px;color:var(--wh4);margin-bottom:6px">Posts breakdown</div>
+                  <div style="display:flex;flex-direction:column;gap:3px" id="done-breakdown">
+                    <div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:var(--wh3)">LinkedIn</span><span style="font-family:'DM Mono',monospace;color:var(--wh2)">18 posts</span></div>
+                    <div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:var(--wh3)">Instagram</span><span style="font-family:'DM Mono',monospace;color:var(--wh2)">16 posts</span></div>
+                    <div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:var(--wh3)">TikTok + YouTube</span><span style="font-family:'DM Mono',monospace;color:var(--wh2)">26 posts</span></div>
+                    <div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:var(--wh3)">X + Facebook + Threads</span><span style="font-family:'DM Mono',monospace;color:var(--wh2)">38 posts</span></div>
+                    <div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:var(--wh3)">Google Business</span><span style="font-family:'DM Mono',monospace;color:var(--wh2)">8 posts</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ACTION BUTTONS -->
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button class="btn-wh" onclick="showPage('posts',document.querySelectorAll('.nav-btn')[4])"><i data-lucide="eye" style="width:13px;height:13px"></i> Review all posts</button>
+                <button class="btn-s ow" onclick="toast('CSV + PDF + Calendar package downloading...')"><i data-lucide="download" style="width:13px;height:13px"></i> Download package</button>
+                <button class="btn-s ow" onclick="showPage('autopublish',document.querySelectorAll('.nav-btn')[2])"><i data-lucide="send" style="width:13px;height:13px"></i> Set up auto-publish</button>
+                <button class="btn-s" onclick="resetPipeline()"><i data-lucide="refresh-cw" style="width:13px;height:13px"></i> Run for another URL</button>
+              </div>
+
+              <!-- DOWNLOAD DEPLOY OPTION -->
+              <div style="margin-top:16px;padding:14px;background:var(--bk2);border:1px solid var(--bk3);border-left:2px solid var(--wh)">
+                <div style="font-size:11px;font-weight:600;color:var(--wh);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px"><i data-lucide="download" style="width:12px;height:12px;display:inline"></i> Deploy this setup to your own server</div>
+                <div style="font-size:11px;color:var(--wh4);line-height:1.6;margin-bottom:10px">Download a ready-to-deploy package — your posts, your business profile, a pre-configured Next.js app, and the deployment guide. Host it yourself or give it to a client as a white-label setup.</div>
+                <div style="display:flex;gap:7px;flex-wrap:wrap">
+                  <button class="btn-s wh" onclick="toast('Downloading full deploy package — index.html + posts + guide + env config')"><i data-lucide="package" style="width:12px;height:12px"></i> Download deploy package</button>
+                  <button class="btn-s" onclick="toast('Opening deployment guide in new tab')"><i data-lucide="book-open" style="width:12px;height:12px"></i> View deployment guide</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════ -->
+      <!-- ══ AUTO-PUBLISH ENGINE ══ -->
+      <!-- ══════════════════════════════════════════ -->
+      <div class="page" id="page-autopublish">
+        <div style="max-width:700px">
+          <div style="margin-bottom:20px">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;line-height:1.15;margin-bottom:8px">Auto-Publish Engine</div>
+            <div style="font-size:13px;color:var(--wh4);line-height:1.7">Connect your social accounts once. Aletheiahq publishes your posts on the best day and time for each platform — automatically, while you are offline. No Buffer. No Hootsuite. No extra subscriptions.</div>
+          </div>
+
+          <!-- PLATFORM CONNECTION STATUS -->
+          <div class="card" style="margin-bottom:14px">
+            <div class="card-t"><i data-lucide="plug" style="width:15px;height:15px"></i> Connected Platforms</div>
+            <div class="card-sub">Connect once — post forever</div>
+            <div style="display:flex;flex-direction:column;gap:0">
+
+              <!-- LinkedIn -->
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--bk3)">
+                <div style="width:32px;height:32px;background:var(--bk3);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="linkedin" style="width:15px;height:15px;color:var(--wh3)"></i></div>
+                <div style="flex:1"><div style="font-size:13px;font-weight:500">LinkedIn</div><div style="font-size:10px;color:var(--wh4)">Personal + Company page publishing</div></div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div id="li-status" style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.5px">Not connected</div>
+                  <button class="btn-s wh" onclick="connectPlatform('linkedin',this)" style="font-size:10px;padding:5px 10px">Connect</button>
+                </div>
+              </div>
+
+              <!-- Instagram -->
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--bk3)">
+                <div style="width:32px;height:32px;background:var(--bk3);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="instagram" style="width:15px;height:15px;color:var(--wh3)"></i></div>
+                <div style="flex:1"><div style="font-size:13px;font-weight:500">Instagram</div><div style="font-size:10px;color:var(--wh4)">Feed posts, carousels, Reels scheduling</div></div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.5px">Not connected</div>
+                  <button class="btn-s wh" onclick="connectPlatform('instagram',this)" style="font-size:10px;padding:5px 10px">Connect</button>
+                </div>
+              </div>
+
+              <!-- Facebook -->
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--bk3)">
+                <div style="width:32px;height:32px;background:var(--bk3);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="facebook" style="width:15px;height:15px;color:var(--wh3)"></i></div>
+                <div style="flex:1"><div style="font-size:13px;font-weight:500">Facebook</div><div style="font-size:10px;color:var(--wh4)">Page posts and group publishing</div></div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.5px">Not connected</div>
+                  <button class="btn-s wh" onclick="connectPlatform('facebook',this)" style="font-size:10px;padding:5px 10px">Connect</button>
+                </div>
+              </div>
+
+              <!-- X -->
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--bk3)">
+                <div style="width:32px;height:32px;background:var(--bk3);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="twitter" style="width:15px;height:15px;color:var(--wh3)"></i></div>
+                <div style="flex:1"><div style="font-size:13px;font-weight:500">X (Twitter)</div><div style="font-size:10px;color:var(--wh4)">Posts and threads auto-publish</div></div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.5px">Not connected</div>
+                  <button class="btn-s wh" onclick="connectPlatform('x',this)" style="font-size:10px;padding:5px 10px">Connect</button>
+                </div>
+              </div>
+
+              <!-- TikTok -->
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--bk3)">
+                <div style="width:32px;height:32px;background:var(--bk3);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="video" style="width:15px;height:15px;color:var(--wh3)"></i></div>
+                <div style="flex:1"><div style="font-size:13px;font-weight:500">TikTok</div><div style="font-size:10px;color:var(--wh4)">Scripts and captions exported for recording</div></div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="font-size:10px;color:var(--wh3);text-transform:uppercase;letter-spacing:0.5px">Export only</div>
+                  <button class="btn-s" style="font-size:10px;padding:5px 10px" onclick="toast('TikTok scripts exported to downloads')">Export</button>
+                </div>
+              </div>
+
+              <!-- Google Business -->
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 0">
+                <div style="width:32px;height:32px;background:var(--bk3);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="map-pin" style="width:15px;height:15px;color:var(--wh3)"></i></div>
+                <div style="flex:1"><div style="font-size:13px;font-weight:500">Google Business Profile</div><div style="font-size:10px;color:var(--wh4)">Local updates and offers</div></div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.5px">Not connected</div>
+                  <button class="btn-s wh" onclick="connectPlatform('google',this)" style="font-size:10px;padding:5px 10px">Connect</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ACTIVE SCHEDULE -->
+          <div class="card" style="margin-bottom:14px">
+            <div class="card-t"><i data-lucide="clock" style="width:15px;height:15px"></i> Publish Schedule</div>
+            <div class="card-sub">AI picks the best time per platform based on engagement data</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+              <div class="f-grp"><label class="f-lbl">Frequency</label><select class="f-inp" onchange="toast('Schedule updated')"><option>Smart — 30 days spread</option><option>3× per week</option><option>Daily</option><option>Twice daily</option></select></div>
+              <div class="f-grp"><label class="f-lbl">Posting time</label><select class="f-inp" onchange="toast('Time updated')"><option>AI optimal per platform</option><option>Morning 8–10am</option><option>Midday 12–1pm</option><option>Evening 6–8pm</option></select></div>
+            </div>
+            <div style="padding:12px;background:var(--bk2);border:1px solid var(--bk3);border-left:2px solid var(--wh);margin-bottom:14px">
+              <div style="font-size:11px;font-weight:600;color:var(--wh);margin-bottom:4px">Next scheduled posts</div>
+              <div style="display:flex;flex-direction:column;gap:5px">
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px"><i data-lucide="linkedin" style="width:12px;height:12px;color:var(--wh3)"></i><span style="color:var(--wh3)">Today 9:00am</span><span style="color:var(--wh4)">—</span><span style="color:var(--wh2)">Authority post: OIA methodology insight</span><span class="badge b-bk" style="margin-left:auto;font-size:9px">Queued</span></div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px"><i data-lucide="instagram" style="width:12px;height:12px;color:var(--wh3)"></i><span style="color:var(--wh3)">Today 12:00pm</span><span style="color:var(--wh4)">—</span><span style="color:var(--wh2)">Carousel: Services breakdown</span><span class="badge b-bk" style="margin-left:auto;font-size:9px">Queued</span></div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px"><i data-lucide="twitter" style="width:12px;height:12px;color:var(--wh3)"></i><span style="color:var(--wh3)">Thu 8:30am</span><span style="color:var(--wh4)">—</span><span style="color:var(--wh2)">Thread: Busy vs productive</span><span class="badge b-bk" style="margin-left:auto;font-size:9px">Queued</span></div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn-wh" onclick="toast('Auto-publish activated — posts will go live on schedule')"><i data-lucide="play" style="width:13px;height:13px"></i> Activate auto-publish</button>
+              <button class="btn-s" onclick="showPage('calendar',document.querySelectorAll('.nav-btn')[9])"><i data-lucide="calendar-days" style="width:13px;height:13px"></i> View full calendar</button>
+              <button class="btn-s" onclick="toast('All scheduled posts paused')"><i data-lucide="pause" style="width:13px;height:13px"></i> Pause all</button>
+            </div>
+          </div>
+
+          <!-- DOWNLOAD DEPLOY PACKAGE -->
+          <div class="card" style="border-left:2px solid var(--wh)">
+            <div class="card-t"><i data-lucide="package" style="width:15px;height:15px"></i> Client Deploy Package</div>
+            <div class="card-sub">Give any client a turnkey setup they can run themselves</div>
+            <div style="font-size:13px;color:var(--wh3);line-height:1.7;margin-bottom:14px">Download a complete deployment bundle — the Aletheiahq app pre-configured with a client's posts, their business profile, API keys setup guide, and one-click Vercel/Netlify deploy button. Client unzips, follows 3 steps, and they are live with their own content engine.</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+              <div style="padding:12px;background:var(--bk2);border:1px solid var(--bk3)">
+                <div style="font-size:11px;font-weight:600;color:var(--wh);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.4px"><i data-lucide="download" style="width:12px;height:12px;display:inline"></i> Standard deploy</div>
+                <div style="font-size:11px;color:var(--wh4);line-height:1.5;margin-bottom:8px">index.html + generated posts + DEPLOYMENT_GUIDE.md + .env.example</div>
+                <button class="btn-s wh" onclick="toast('Standard deploy package downloading...')" style="font-size:10px">Download ZIP</button>
+              </div>
+              <div style="padding:12px;background:var(--bk2);border:1px solid var(--bk3)">
+                <div style="font-size:11px;font-weight:600;color:var(--wh);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.4px"><i data-lucide="server" style="width:12px;height:12px;display:inline"></i> Full production deploy</div>
+                <div style="font-size:11px;color:var(--wh4);line-height:1.5;margin-bottom:8px">Next.js app + Supabase schema + Stripe config + Vercel deploy settings</div>
+                <button class="btn-s wh" onclick="toast('Full production package downloading...')" style="font-size:10px">Download ZIP</button>
+              </div>
+            </div>
+            <div style="padding:10px 12px;background:var(--bk2);font-size:11px;color:var(--wh4);line-height:1.6;border:1px solid var(--bk3)">
+              <strong style="color:var(--wh3)">Note on platform APIs:</strong> Direct publishing to LinkedIn, Instagram, Facebook, and X requires API access approved by each platform. TikTok and YouTube export scripts for manual upload. Until API approval is in place, the download package + scheduler export is the safest and fastest path to getting clients posting consistently.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ══ GENERATE ══ -->
+      <div class="page" id="page-generate">
+        <div style="max-width:560px;position:relative">
+          <div class="card" id="gen-card">
+            <div class="card-t"><i data-lucide="globe" style="width:16px;height:16px"></i> Website Analysis & Generation</div>
+            <div class="card-sub">Paste your URL. We scan, analyse, build your content package.</div>
+            <div class="f-grp"><label class="f-lbl">Business name</label><input class="f-inp" value="" placeholder="Your business name"/></div>
+            <div class="f-grp"><label class="f-lbl">Website URL</label><input class="f-inp" value="https://asamoahgroup.com"/></div>
+            <div class="two-col"><div class="f-grp"><label class="f-lbl">Campaign goal</label><select class="f-inp"><option>Lead generation</option><option>Brand authority</option><option>Product launch</option></select></div><div class="f-grp"><label class="f-lbl">Tone</label><select class="f-inp"><option>Professional + Authoritative</option><option>Conversational</option><option>Bold + Direct</option></select></div></div>
+            <div class="f-grp"><label class="f-lbl">Focus services</label><input class="f-inp" value="Your Methodology, Strategy Consulting, AI Advisory"/></div>
+            <div style="display:flex;gap:7px;padding:10px 12px;background:var(--bk2);border:1px solid var(--bk3);margin-bottom:14px"><i data-lucide="shield" style="width:12px;height:12px;flex-shrink:0;margin-top:1px"></i><span style="font-size:10px;color:var(--wh4);line-height:1.6;text-transform:uppercase;letter-spacing:0.4px">Secure crawler · Blocks private IPs, localhost, AWS metadata · Respects robots.txt · Your data never trains AI</span></div>
+            <button class="btn-wh" onclick="runGen()"><i data-lucide="zap" style="width:14px;height:14px"></i> Analyse & Generate 100+ Posts</button>
+          </div>
+          <div class="gen-ov" id="gen-ov">
+            <div class="gen-count" id="gcn">0</div>
+            <div style="font-size:10px;color:var(--wh4);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">posts generated</div>
+            <div class="gen-stage wait" id="gs1"><i data-lucide="circle" style="width:12px;height:12px" id="gi1"></i> Scanning website pages</div>
+            <div class="gen-stage wait" id="gs2"><i data-lucide="circle" style="width:12px;height:12px" id="gi2"></i> Analysing business model and audiences</div>
+            <div class="gen-stage wait" id="gs3"><i data-lucide="circle" style="width:12px;height:12px" id="gi3"></i> Generating 100+ platform posts</div>
+            <div class="gen-stage wait" id="gs4"><i data-lucide="circle" style="width:12px;height:12px" id="gi4"></i> Building lead sequences and hooks</div>
+            <div id="gen-done" style="display:none;text-align:center;margin-top:12px">
+              <div class="badge b-wh" style="font-size:11px;padding:6px 14px;margin-bottom:12px;display:inline-flex;gap:5px"><i data-lucide="check" style="width:12px;height:12px"></i> 114 posts ready</div><br/>
+              <button class="btn-wh" style="width:auto;padding:10px 22px;margin-top:8px" onclick="showPage('posts',document.querySelectorAll('.nav-btn')[2])">Open Post Library <i data-lucide="arrow-right" style="width:13px;height:13px"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ POST LIBRARY ══ -->
+      <div class="page" id="page-posts">
+        <div class="chip-row">
+          <div class="chip active" onclick="fchip(this)">All (114)</div>
+          <div class="chip" onclick="fchip(this)"><i data-lucide="linkedin" style="width:11px;height:11px"></i> LinkedIn (18)</div>
+          <div class="chip" onclick="fchip(this)"><i data-lucide="instagram" style="width:11px;height:11px"></i> Instagram (16)</div>
+          <div class="chip" onclick="fchip(this)"><i data-lucide="video" style="width:11px;height:11px"></i> TikTok (14)</div>
+          <div class="chip" onclick="fchip(this)"><i data-lucide="twitter" style="width:11px;height:11px"></i> X (14)</div>
+          <div class="chip" onclick="fchip(this)"><i data-lucide="facebook" style="width:11px;height:11px"></i> Facebook (12)</div>
+          <div class="chip" onclick="fchip(this)"><i data-lucide="youtube" style="width:11px;height:11px"></i> YouTube (12)</div>
+          <div class="chip" onclick="fchip(this)"><i data-lucide="message-circle" style="width:11px;height:11px"></i> Threads (10)</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+          <span style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.5px">Funnel:</span>
+          <div class="chip active" style="font-size:10px" onclick="fchip(this)">All</div>
+          <div class="chip" style="font-size:10px" onclick="fchip(this)">Awareness</div>
+          <div class="chip" style="font-size:10px" onclick="fchip(this)">Consideration</div>
+          <div class="chip" style="font-size:10px" onclick="fchip(this)">Conversion</div>
+          <div style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap">
+            <button class="btn-s ow"><i data-lucide="download" style="width:11px;height:11px"></i> CSV</button>
+            <button class="btn-s wh"><i data-lucide="file-text" style="width:11px;height:11px"></i> PDF</button>
+            <button class="btn-s"><i data-lucide="refresh-cw" style="width:11px;height:11px"></i> Repurpose all</button>
+          </div>
+        </div>
+        <div class="post-grid">
+          <div class="post-card" onclick="selPost(this)">
+            <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px"><span class="badge b-bk"><i data-lucide="linkedin" style="width:9px;height:9px"></i> LinkedIn</span><span class="badge b-bk">Awareness</span><span class="badge b-wh">Authority</span></div>
+            <div class="post-hook">"Most businesses spend 80% of their time operating and only 20% growing. Operational Intelligence flips that permanently."</div>
+            <div class="post-cap">At Your Business, I've watched leaders work themselves to the edge of burnout running businesses that run them back. The OIA methodology isn't another productivity tip — it's the architecture that makes your business work without you chasing it.</div>
+            <div class="post-tags">#OperationalIntelligence #Strategy #Leadership</div>
+            <div class="post-vis"><i data-lucide="image" style="width:11px;height:11px"></i> Split: chaotic desk vs clean dashboard · 1200×627px</div>
+            <div class="post-acts"><button class="btn-s" onclick="cp(event)"><i data-lucide="copy" style="width:11px;height:11px"></i> Copy</button><button class="btn-s"><i data-lucide="calendar-plus" style="width:11px;height:11px"></i> Schedule</button><button class="btn-s wh"><i data-lucide="user-plus" style="width:11px;height:11px"></i> Lead Hook</button></div>
+          </div>
+          <div class="post-card" onclick="selPost(this)">
+            <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px"><span class="badge b-bk"><i data-lucide="instagram" style="width:9px;height:9px"></i> Instagram</span><span class="badge b-bk">Conversion</span><span class="badge b-wh">Lead Magnet</span></div>
+            <div class="post-hook">"What if your business ran on autopilot for 30 days straight — without a single message to you?"</div>
+            <div class="post-cap">Not a fantasy. That's the before-and-after for every client we take on. Drop "OIA" in the comments and I'll personally send you the diagnostic we use on day one — finds the exact leak costing you 10+ hours per week.</div>
+            <div class="post-tags">#SmallBusiness #BusinessOwner #Consulting</div>
+            <div class="post-vis"><i data-lucide="image" style="width:11px;height:11px"></i> Clean desk, phone face down · 1080×1350px</div>
+            <div class="post-acts"><button class="btn-s" onclick="cp(event)"><i data-lucide="copy" style="width:11px;height:11px"></i> Copy</button><button class="btn-s"><i data-lucide="calendar-plus" style="width:11px;height:11px"></i> Schedule</button><button class="btn-s wh"><i data-lucide="user-plus" style="width:11px;height:11px"></i> Lead Hook</button></div>
+          </div>
+          <div class="post-card" onclick="selPost(this)">
+            <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px"><span class="badge b-bk"><i data-lucide="video" style="width:9px;height:9px"></i> TikTok</span><span class="badge b-bk">Awareness</span><span class="badge b-wh">Founder Story</span></div>
+            <div class="post-hook">"Hook: I left human services to build a consulting firm. Nobody told me the same systems would run both."</div>
+            <div class="post-cap">Script: Open face-to-camera. "Day job — helping people through crisis. Side practice — helping companies out of chaos. The thing nobody tells you? The frameworks are identical." Walk through 3 OIA pillars. End: "Comment 'SYSTEMS' for the free diagnostic."</div>
+            <div class="post-tags">#BusinessTok #Consulting #Entrepreneur</div>
+            <div class="post-acts"><button class="btn-s" onclick="cp(event)"><i data-lucide="copy" style="width:11px;height:11px"></i> Copy</button><button class="btn-s"><i data-lucide="calendar-plus" style="width:11px;height:11px"></i> Schedule</button><button class="btn-s wh"><i data-lucide="user-plus" style="width:11px;height:11px"></i> Lead Hook</button></div>
+          </div>
+          <div class="post-card" onclick="selPost(this)">
+            <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px"><span class="badge b-bk"><i data-lucide="twitter" style="width:9px;height:9px"></i> X</span><span class="badge b-bk">Consideration</span><span class="badge b-wh">Thread</span></div>
+            <div class="post-hook">"Busy consultants sell hours. Valuable ones sell outcomes. Here's the full thread on the difference."</div>
+            <div class="post-cap">1/ Most consultants are paid to show up. That's a job with a client, not a business. Here's the exact mindset shift that moved Your Business from billing hours to building systems that generate revenue while I'm offline…</div>
+            <div class="post-tags">#Consulting #Strategy #OIA</div>
+            <div class="post-acts"><button class="btn-s" onclick="cp(event)"><i data-lucide="copy" style="width:11px;height:11px"></i> Copy</button><button class="btn-s"><i data-lucide="calendar-plus" style="width:11px;height:11px"></i> Schedule</button><button class="btn-s wh"><i data-lucide="user-plus" style="width:11px;height:11px"></i> Lead Hook</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PROFILE ANALYZER ══ -->
+      <div class="page" id="page-analyzer">
+        <div class="card">
+          <div class="card-t"><i data-lucide="scan-search" style="width:16px;height:16px"></i> Social Profile Analyzer</div>
+          <div class="card-sub">Paste LinkedIn, Instagram, Facebook, or X URL — get a full optimisation report</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+            <div class="chip active" onclick="fchip(this)"><i data-lucide="linkedin" style="width:11px;height:11px"></i> LinkedIn</div>
+            <div class="chip" onclick="fchip(this)"><i data-lucide="instagram" style="width:11px;height:11px"></i> Instagram</div>
+            <div class="chip" onclick="fchip(this)"><i data-lucide="twitter" style="width:11px;height:11px"></i> X</div>
+            <div class="chip" onclick="fchip(this)"><i data-lucide="facebook" style="width:11px;height:11px"></i> Facebook</div>
+          </div>
+          <div class="url-row"><input class="url-inp" value="https://linkedin.com/in/frank-asamoah" placeholder="Paste profile URL…"/><button class="btn-wh" style="width:auto;padding:11px 20px;white-space:nowrap" onclick="runAnalysis()"><i data-lucide="scan-search" style="width:13px;height:13px"></i> Analyse</button></div>
+        </div>
+        <div id="ap-prog" style="display:none" class="card">
+          <div class="card-t">Analysing your profile…</div>
+          <div style="margin-top:10px" id="ap-stages">
+            <div class="a-stage wait" id="as1"><div class="a-stage-ic"><i data-lucide="globe" style="width:13px;height:13px;color:var(--wh4)"></i></div><div><div style="font-size:12px;font-weight:500">Fetching profile data</div><div style="font-size:10px;color:var(--wh4)">Headline, about, skills, featured content</div></div></div>
+            <div class="a-stage wait" id="as2"><div class="a-stage-ic"><i data-lucide="brain" style="width:13px;height:13px;color:var(--wh4)"></i></div><div><div style="font-size:12px;font-weight:500">Scoring vs. expert benchmarks</div><div style="font-size:10px;color:var(--wh4)">Keywords, cadence, social proof, engagement</div></div></div>
+            <div class="a-stage wait" id="as3"><div class="a-stage-ic"><i data-lucide="lightbulb" style="width:13px;height:13px;color:var(--wh4)"></i></div><div><div style="font-size:12px;font-weight:500">Writing optimisation copy</div><div style="font-size:10px;color:var(--wh4)">Headline, about section, keywords, featured</div></div></div>
+            <div class="a-stage wait" id="as4"><div class="a-stage-ic"><i data-lucide="file-text" style="width:13px;height:13px;color:var(--wh4)"></i></div><div><div style="font-size:12px;font-weight:500">Building export report</div><div style="font-size:10px;color:var(--wh4)">PDF + Word-ready</div></div></div>
+          </div>
+        </div>
+        <div id="ap-result" style="display:none">
+          <div class="p-hdr">
+            <div class="p-avt">FA</div>
+            <div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">Your Name, MBA</div><div style="font-size:11px;color:var(--wh4);margin-top:2px">Founder & Principal · Your Business · Waltham, MA</div></div>
+            <div style="text-align:center"><div class="score-ring"><div class="sr-num">62</div><div class="sr-lbl">now</div></div><div style="font-size:9px;color:var(--wh4);margin-top:3px;text-transform:uppercase;letter-spacing:0.4px">Current</div></div>
+            <div style="text-align:center"><div class="score-ring" style="border-color:var(--wh2)"><div class="sr-num">91</div><div class="sr-lbl">after</div></div><div style="font-size:9px;color:var(--wh4);margin-top:3px;text-transform:uppercase;letter-spacing:0.4px">Potential</div></div>
+          </div>
+          <div class="two-col" style="margin-bottom:14px">
+            <div class="card"><div class="card-t" style="font-size:15px">Profile Scores</div><div style="margin-top:10px"><div class="prog-row"><span class="prog-lbl">Headline</span><div class="prog-bar"><div class="prog-fill" style="width:55%"></div></div><span class="prog-val">55%</span></div><div class="prog-row"><span class="prog-lbl">About section</span><div class="prog-bar"><div class="prog-fill" style="width:70%"></div></div><span class="prog-val">70%</span></div><div class="prog-row"><span class="prog-lbl">SEO keywords</span><div class="prog-bar"><div class="prog-fill" style="width:48%"></div></div><span class="prog-val">48%</span></div><div class="prog-row"><span class="prog-lbl">Post relevance</span><div class="prog-bar"><div class="prog-fill" style="width:80%"></div></div><span class="prog-val">80%</span></div><div class="prog-row"><span class="prog-lbl">Featured section</span><div class="prog-bar"><div class="prog-fill" style="width:30%"></div></div><span class="prog-val">30%</span></div></div></div>
+            <div class="card"><div class="card-t" style="font-size:15px">Expert Positioning</div><div style="margin-top:10px;display:flex;flex-direction:column;gap:7px"><div style="display:flex;justify-content:space-between;font-size:12px;align-items:center"><span style="color:var(--wh4)">Strategy thought leader</span><span class="badge b-ok">Strong</span></div><div style="display:flex;justify-content:space-between;font-size:12px;align-items:center"><span style="color:var(--wh4)">OIA subject expert</span><span class="badge b-bk">Developing</span></div><div style="display:flex;justify-content:space-between;font-size:12px;align-items:center"><span style="color:var(--wh4)">Inbound lead readiness</span><span class="badge b-bk">Weak</span></div></div></div>
+          </div>
+          <div class="imp-card"><div class="imp-title"><span class="badge b-wh">Critical</span> Headline not converting</div><div class="imp-body">Current: "Founder & Principal at Your Business | Strategy Consultant | MBA" — this describes a title, not a value proposition.</div><div class="imp-sug"><strong style="color:var(--wh)">Suggested:</strong> "I help executives scale operations without scaling headcount · Founder, Your Business · Your Methodology · HBS Foundry 2026 · NSF I-Corps Fellow"</div><div style="display:flex;gap:6px;margin-top:9px"><button class="btn-s ow" onclick="cp(event)"><i data-lucide="copy" style="width:11px;height:11px"></i> Copy</button><button class="btn-s"><i data-lucide="refresh-cw" style="width:11px;height:11px"></i> Regenerate</button></div></div>
+          <div class="imp-card"><div class="imp-title"><span class="badge b-wh">Critical</span> Missing SEO keywords</div><div class="imp-body">Not appearing in searches for "operational consulting," "AI strategy advisor," or "business transformation" — the exact terms your clients are typing.</div><div class="imp-sug"><strong style="color:var(--wh)">Keywords to add:</strong> operational excellence · business transformation · AI implementation · systems thinking · fractional COO · management consulting · growth strategy</div><div style="display:flex;gap:6px;margin-top:9px"><button class="btn-s ow" onclick="cp(event)"><i data-lucide="copy" style="width:11px;height:11px"></i> Copy all</button></div></div>
+          <div class="export-bar"><span class="export-label" style="font-size:11px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.5px">Export:</span><button class="btn-s wh" onclick="toast('PDF downloaded')"><i data-lucide="file-text" style="width:12px;height:12px"></i> Download PDF</button><button class="btn-s ow" onclick="toast('Word doc ready')"><i data-lucide="file" style="width:12px;height:12px"></i> Word</button><button class="btn-s" onclick="toast('All copied')"><i data-lucide="clipboard" style="width:12px;height:12px"></i> Copy all</button></div>
+        </div>
+      </div>
+
+      <!-- ══ REPURPOSE ENGINE ══ -->
+      <div class="page" id="page-repurpose">
+        <div class="card">
+          <div class="card-t"><i data-lucide="refresh-cw" style="width:16px;height:16px"></i> Repurpose Engine</div>
+          <div class="card-sub">One piece of content → 8 platform-native posts. Each written differently. Each designed to perform on its platform.</div>
+          <textarea class="f-inp" style="height:90px;resize:none;margin-bottom:12px" placeholder="Paste any content — post, article, transcript, bullet points, rough idea…">Most businesses spend 80% of their time operating and 20% growing. Operational Intelligence flips that ratio permanently. When your systems run themselves, your leadership finally can too.</textarea>
+          <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:14px"><span style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.5px">Repurpose to:</span><div class="chip active" onclick="fchip(this)">All 8 platforms</div><div class="chip" onclick="fchip(this)">Short-form only</div><div class="chip" onclick="fchip(this)">LinkedIn only</div></div>
+          <button class="btn-wh" onclick="runRepurpose(this)" style="max-width:260px"><i data-lucide="refresh-cw" style="width:13px;height:13px"></i> Repurpose into 8 posts</button>
+        </div>
+        <div id="rp-res" style="display:none">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px"><span class="badge b-wh"><i data-lucide="check" style="width:11px;height:11px"></i> 8 posts from 1 source</span><span style="font-size:11px;color:var(--wh4)">Each platform-native and differently written</span></div>
+          <div class="post-grid">
+            <div class="rp-card"><div class="rp-from"><i data-lucide="linkedin" style="width:11px;height:11px"></i> LinkedIn <i data-lucide="arrow-right" style="width:10px;height:10px"></i> Thought leadership</div><div class="post-hook">"The businesses dominating the next decade aren't working harder. Their systems are working harder for them."</div><div class="post-cap">I've spent years watching brilliant founders burn out — not because they lacked talent but because their business was built to need them at every step. The shift from operator to architect is the only move that compounds. Here's the OIA framework that makes it happen in 90 days.</div><div style="display:flex;gap:6px;margin-top:10px"><button class="btn-s" onclick="cp(event)"><i data-lucide="copy" style="width:11px;height:11px"></i> Copy</button><button class="btn-s wh"><i data-lucide="calendar-plus" style="width:11px;height:11px"></i> Schedule</button></div></div>
+            <div class="rp-card"><div class="rp-from"><i data-lucide="twitter" style="width:11px;height:11px"></i> X Thread <i data-lucide="arrow-right" style="width:10px;height:10px"></i> Opinion</div><div class="post-hook">"Hot take: most business owners have a job, not a business."</div><div class="post-cap">The difference? A job stops when you stop. A business doesn't. 1/ The test is simple — if you took 30 days off tomorrow, would your revenue hold? If the answer is no, you don't have a business. You have a self-employment arrangement. Here's how to change that…</div><div style="display:flex;gap:6px;margin-top:10px"><button class="btn-s" onclick="cp(event)"><i data-lucide="copy" style="width:11px;height:11px"></i> Copy</button><button class="btn-s wh"><i data-lucide="calendar-plus" style="width:11px;height:11px"></i> Schedule</button></div></div>
+            <div class="rp-card"><div class="rp-from"><i data-lucide="instagram" style="width:11px;height:11px"></i> Instagram <i data-lucide="arrow-right" style="width:10px;height:10px"></i> Carousel hook</div><div class="post-hook">"Swipe to see why the 80/20 rule is destroying your growth ➡"</div><div class="post-cap">Slide 1: 80% operating. 20% growing. Sound familiar? Slide 2: What if it was flipped? Slide 3: That's OIA. Slide 4: Our clients flip it in 90 days. Slide 5: DM me "SYSTEMS" for the free diagnostic.</div><div style="display:flex;gap:6px;margin-top:10px"><button class="btn-s" onclick="cp(event)"><i data-lucide="copy" style="width:11px;height:11px"></i> Copy</button><button class="btn-s wh"><i data-lucide="calendar-plus" style="width:11px;height:11px"></i> Schedule</button></div></div>
+            <div class="rp-card"><div class="rp-from"><i data-lucide="video" style="width:11px;height:11px"></i> TikTok <i data-lucide="arrow-right" style="width:10px;height:10px"></i> Hook + script</div><div class="post-hook">"POV: Your business runs at 80% operations. Let me fix that."</div><div class="post-cap">Open to camera. "I used to spend 80% of my week running fires. Now? 80% building the future." Beat. "The difference wasn't hustle — it was architecture." Show 3 OIA slides. End: "Type 'SYSTEMS' and I'll send the free diagnostic."</div><div style="display:flex;gap:6px;margin-top:10px"><button class="btn-s" onclick="cp(event)"><i data-lucide="copy" style="width:11px;height:11px"></i> Copy</button><button class="btn-s wh"><i data-lucide="calendar-plus" style="width:11px;height:11px"></i> Schedule</button></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ GHOST WRITER ══ -->
+      <div class="page" id="page-ghostwriter">
+        <div class="card">
+          <div class="card-t"><i data-lucide="ghost" style="width:16px;height:16px"></i> Ghost Writer</div>
+          <div class="card-sub">Rough idea → polished post in your voice. 99% human score. Built for people with powerful ideas who hate blank screens.</div>
+          <div class="f-grp"><label class="f-lbl">What do you want to say?</label><textarea class="f-inp" style="height:80px;resize:none" id="gw-idea">I want to talk about how most people confuse being busy with being productive. Same pattern in human services and consulting — people mistake activity for output.</textarea></div>
+          <div class="two-col"><div class="f-grp"><label class="f-lbl">Platform</label><select class="f-inp"><option>LinkedIn post</option><option>Instagram caption</option><option>TikTok script</option><option>X thread</option><option>Facebook post</option><option>Email newsletter</option></select></div><div class="f-grp"><label class="f-lbl">My voice is</label><select class="f-inp"><option>Direct + Authoritative</option><option>Warm + Conversational</option><option>Bold + Provocative</option><option>Educational + Precise</option></select></div></div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"><div class="chip active" onclick="fchip(this)">First person (I/my)</div><div class="chip" onclick="fchip(this)">Include hashtags</div><div class="chip active" onclick="fchip(this)">Include lead hook</div><div class="chip active" onclick="fchip(this)">No fluff — value only</div></div>
+          <button class="btn-wh" onclick="runGhost(this)" style="max-width:240px"><i data-lucide="ghost" style="width:13px;height:13px"></i> Write in my voice</button>
+        </div>
+        <div id="gw-res" style="display:none">
+          <div class="card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+              <div class="card-t" style="font-size:15px;margin-bottom:0">Your post — LinkedIn</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap"><div class="human-score"><i data-lucide="shield-check" style="width:11px;height:11px"></i> 99% Human</div><span class="badge b-bk">AI detector: undetectable</span></div>
+            </div>
+            <div class="gw-result">Busy and productive are not the same thing. I learned that working in human services before I ever opened a business.
+
+We had teams logging 12-hour days and still falling behind. Not because people weren't working hard. Because the systems they were working inside were designed to create activity, not outcomes.
+
+The same pattern shows up in every consulting engagement I take on. Founders who can't take a vacation. Executives answering Slack at 11pm. Teams in motion but not in progress.
+
+Here's the shift that changes everything:
+
+Stop measuring effort. Start measuring what moved.
+
+In human services we called it case progress. In business I call it operational velocity. The question is always the same — did what you did today move the dial, or did it just keep the machine running?
+
+If you're spending more than 70% of your week maintaining instead of building, your business is managing you. Not the other way around.
+
+That's the problem OIA solves. Comment "SYSTEMS" if you want the diagnostic we use on day one.
+
+#Leadership #Consulting #OperationalIntelligence #BusinessGrowth</div>
+            <div style="margin-top:12px;display:flex;gap:7px;flex-wrap:wrap">
+              <button class="btn-s wh" onclick="cp(event)"><i data-lucide="copy" style="width:11px;height:11px"></i> Copy post</button>
+              <button class="btn-s"><i data-lucide="calendar-plus" style="width:11px;height:11px"></i> Schedule</button>
+              <button class="btn-s ow"><i data-lucide="refresh-cw" style="width:11px;height:11px"></i> Rewrite</button>
+              <button class="btn-s" onclick="showPage('repurpose',document.querySelectorAll('.nav-btn')[4])"><i data-lucide="refresh-cw" style="width:11px;height:11px"></i> Repurpose to 8</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ LEAD ENGINE ══ -->
+      <div class="page" id="page-leads">
+        <div class="tab-row"><div class="tab active" onclick="stab(this,'lp')">Pipeline (67)</div><div class="tab" onclick="stab(this,'ls')">Sequences</div><div class="tab" onclick="stab(this,'lm')">Lead Magnets</div></div>
+        <div id="lp">
+          <div class="metrics-row"><div class="m-box"><div class="m-lbl">New</div><div class="m-val">18</div><div class="m-trend dim">this week</div></div><div class="m-box"><div class="m-lbl">Warm</div><div class="m-val">31</div><div class="m-trend dim">in sequence</div></div><div class="m-box"><div class="m-lbl">Hot</div><div class="m-val">12</div><div class="m-trend dim">ready to close</div></div><div class="m-box"><div class="m-lbl">Converted</div><div class="m-val">6</div><div class="m-trend"><i data-lucide="trending-up" style="width:11px;height:11px"></i> +2 this month</div></div></div>
+          <div class="lead-card"><div class="lead-top"><div class="lead-avt">AM</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500">Alex Morgan</div><div style="font-size:10px;color:var(--wh4)">Investor · LinkedIn OIA post · 5 days ago</div></div><span class="badge b-wh">Hot</span><button class="btn-s wh" style="margin-left:7px"><i data-lucide="send" style="width:11px;height:11px"></i> Follow up</button></div><div class="prog-row"><span class="prog-lbl">Engagement</span><div class="prog-bar"><div class="prog-fill" style="width:88%"></div></div><span class="prog-val">88%</span></div><div class="prog-row"><span class="prog-lbl">Intent score</span><div class="prog-bar"><div class="prog-fill" style="width:76%"></div></div><span class="prog-val">76%</span></div><div class="ai-insight"><strong>AI says:</strong> Alex commented on your OIA post and viewed your profile twice in 48 hours. Best action: 3-sentence value recap with soft calendar link. Best time: Tuesday 8–9am. Subject: "Quick thought on what we discussed."</div></div>
+          <div class="lead-card"><div class="lead-top"><div class="lead-avt">JW</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500">Jordan Williams</div><div style="font-size:10px;color:var(--wh4)">Pinnacle Realty · 3 post clicks · Profile viewed</div></div><span class="badge b-bk">Warm</span><button class="btn-s" style="margin-left:7px"><i data-lucide="send" style="width:11px;height:11px"></i> Nurture</button></div><div class="prog-row"><span class="prog-lbl">Engagement</span><div class="prog-bar"><div class="prog-fill" style="width:62%"></div></div><span class="prog-val">62%</span></div><div class="ai-insight"><strong>AI says:</strong> Real estate agent interested in AI content. Add to LionPro sequence. Next: AI content agency case study via LinkedIn DM. Best time: Thursday morning.</div></div>
+        </div>
+        <div id="ls" style="display:none"><div class="card"><div class="card-t"><i data-lucide="mail" style="width:15px;height:15px"></i> Consulting Prospect — 5-Step Sequence</div><div class="card-sub">Auto-triggered on warm status</div><div class="seq-step"><div class="seq-num">1</div><div><div style="font-size:12px;font-weight:500;margin-bottom:2px">Day 0 — Value reply (LinkedIn DM)</div><div style="font-size:12px;color:var(--wh4)">Personalised response to the post they engaged with. No pitch — one useful insight that applies to their situation.</div></div></div><div class="seq-step"><div class="seq-num">2</div><div><div style="font-size:12px;font-weight:500;margin-bottom:2px">Day 3 — Case study email</div><div style="font-size:12px;color:var(--wh4)">Your Business one-pager. Subject: "How [similar company] cut overhead 30% in 60 days."</div></div></div><div class="seq-step"><div class="seq-num">3</div><div><div style="font-size:12px;font-weight:500;margin-bottom:2px">Day 7 — Soft calendar invite</div><div style="font-size:12px;color:var(--wh4)">"20 minutes for a complimentary OIA diagnostic. No pitch. Just clarity on what's costing you most."</div></div></div><div class="seq-step"><div class="seq-num">4</div><div><div style="font-size:12px;font-weight:500;margin-bottom:2px">Day 14 — Authority content drop</div><div style="font-size:12px;color:var(--wh4)">Most recent Insights by Your Business article with personal note: "This reminded me of what you mentioned."</div></div></div><div class="seq-step"><div class="seq-num">5</div><div><div style="font-size:12px;font-weight:500;margin-bottom:2px">Day 21 — Final value close</div><div style="font-size:12px;color:var(--wh4)">"Last outreach for now — I built something that removes the exact bottleneck you described. Worth 15 minutes?"</div></div></div></div></div>
+        <div id="lm" style="display:none"><div class="three-col"><div class="card"><div class="card-t" style="font-size:14px"><i data-lucide="file-text" style="width:13px;height:13px"></i> OIA Business Diagnostic</div><div style="font-size:12px;color:var(--wh4);margin:7px 0 12px;line-height:1.6">5-question self-assessment scoring operational maturity. Gate behind email. Builds your list every time it's shared.</div><button class="btn-s wh" onclick="toast('Generating OIA Diagnostic PDF…')"><i data-lucide="download" style="width:11px;height:11px"></i> Generate PDF</button></div><div class="card"><div class="card-t" style="font-size:14px"><i data-lucide="check-square" style="width:13px;height:13px"></i> 90-Day AI Checklist</div><div style="font-size:12px;color:var(--wh4);margin:7px 0 12px;line-height:1.6">47 actions across 3 phases for business owners implementing AI. Highest-converting lead magnet in consulting right now.</div><button class="btn-s wh" onclick="toast('Generating checklist…')"><i data-lucide="download" style="width:11px;height:11px"></i> Generate PDF</button></div><div class="card"><div class="card-t" style="font-size:14px"><i data-lucide="calculator" style="width:13px;height:13px"></i> Revenue Leakage Calculator</div><div style="font-size:12px;color:var(--wh4);margin:7px 0 12px;line-height:1.6">Shows exactly how much revenue prospects lose to operational inefficiency. Captures email on submit.</div><button class="btn-s" onclick="toast('Enterprise plan feature')"><i data-lucide="external-link" style="width:11px;height:11px"></i> Build Now</button></div></div></div>
+      </div>
+
+      <!-- ══ AI MANAGER ══ -->
+      <div class="page" id="page-manager">
+        <div class="two-col">
+          <div>
+            <div class="card"><div class="card-t"><i data-lucide="bot" style="width:15px;height:15px"></i> AI Social Manager</div><div class="card-sub">Today's highest-impact actions</div><div class="row-item"><div style="display:flex;align-items:center;gap:9px"><div style="width:28px;height:28px;background:var(--bk3);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="clock" style="width:12px;height:12px"></i></div><div><div style="font-size:13px;font-weight:500">Post OIA authority — LinkedIn</div><div style="font-size:10px;color:var(--wh4)">9:00–10:30am · Est. 340 impressions</div></div></div><button class="btn-s wh">Post</button></div><div class="row-item"><div style="display:flex;align-items:center;gap:9px"><div style="width:28px;height:28px;background:var(--bk3);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="mail" style="width:12px;height:12px"></i></div><div><div style="font-size:13px;font-weight:500">Follow up: Alex Morgan</div><div style="font-size:10px;color:var(--wh4)">5 days silent · Draft ready</div></div></div><button class="btn-s">Review</button></div><div class="row-item"><div style="display:flex;align-items:center;gap:9px"><div style="width:28px;height:28px;background:var(--bk3);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="instagram" style="width:12px;height:12px"></i></div><div><div style="font-size:13px;font-weight:500">Publish Instagram carousel</div><div style="font-size:10px;color:var(--wh4)">12:00–1:00pm · 5 slides ready</div></div></div><button class="btn-s">Review</button></div></div>
+            <div class="card"><div class="card-t"><i data-lucide="mic" style="width:15px;height:15px"></i> Write in My Voice</div><div class="card-sub">Drop a rough idea — get a polished post</div><textarea class="f-inp" style="height:65px;resize:none;margin-bottom:9px" placeholder="What do you want to say today?"></textarea><div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px"><div class="chip active" onclick="fchip(this)"><i data-lucide="linkedin" style="width:11px;height:11px"></i> LI</div><div class="chip" onclick="this.classList.toggle('active')"><i data-lucide="instagram" style="width:11px;height:11px"></i> IG</div><div class="chip" onclick="this.classList.toggle('active')"><i data-lucide="twitter" style="width:11px;height:11px"></i> X</div></div><button class="btn-wh" onclick="showPage('ghostwriter',document.querySelectorAll('.nav-btn')[5])" style="font-size:12px"><i data-lucide="ghost" style="width:13px;height:13px"></i> Open Ghost Writer</button></div>
+          </div>
+          <div>
+            <div class="card"><div class="card-t"><i data-lucide="bar-chart-3" style="width:15px;height:15px"></i> Content Intelligence</div><div class="card-sub">AI-scored content health</div><div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--bk2);border:1px solid var(--bk3);margin-bottom:12px"><div class="score-ring"><div class="sr-num">78</div><div class="sr-lbl">score</div></div><div><div style="font-size:13px;font-weight:500">Overall content score</div><div style="font-size:11px;color:var(--wh4);margin-top:2px">Variety, funnel coverage, platform balance</div></div></div><div class="prog-row"><span class="prog-lbl">Platform spread</span><div class="prog-bar"><div class="prog-fill" style="width:85%"></div></div><span class="prog-val">85%</span></div><div class="prog-row"><span class="prog-lbl">Funnel coverage</span><div class="prog-bar"><div class="prog-fill" style="width:70%"></div></div><span class="prog-val">70%</span></div><div class="prog-row"><span class="prog-lbl">Lead hooks</span><div class="prog-bar"><div class="prog-fill" style="width:60%"></div></div><span class="prog-val">60%</span></div><div class="prog-row"><span class="prog-lbl">Authority posts</span><div class="prog-bar"><div class="prog-fill" style="width:90%"></div></div><span class="prog-val">90%</span></div><div class="divider"></div><div style="font-size:12px;padding:9px 11px;background:var(--bk2);border-left:2px solid var(--wh);color:var(--wh2);line-height:1.65"><strong style="color:var(--wh)">Gap:</strong> No conversion posts for Agency audience. 5 posts needed.</div><button class="btn-s wh" style="margin-top:9px" onclick="showPage('generate',document.querySelectorAll('.nav-btn')[1])"><i data-lucide="plus" style="width:11px;height:11px"></i> Generate missing posts</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ CALENDAR ══ -->
+      <div class="page" id="page-calendar">
+        <div class="card"><div class="card-t"><i data-lucide="calendar-days" style="width:15px;height:15px"></i> Content Calendar — November 2026</div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px"><div style="font-size:11px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.5px">24 posts scheduled · 3 pending</div><button class="btn-s wh"><i data-lucide="plus" style="width:11px;height:11px"></i> Add post</button></div>
+        <div class="cal-grid"><div class="cal-hdr">Mon</div><div class="cal-hdr">Tue</div><div class="cal-hdr">Wed</div><div class="cal-hdr">Thu</div><div class="cal-hdr">Fri</div><div class="cal-hdr">Sat</div><div class="cal-hdr">Sun</div><div class="cal-cell"><div class="cal-day">3</div><div class="cal-ev li">LI: OIA post</div></div><div class="cal-cell today"><div class="cal-day">4 · Today</div><div class="cal-ev ig">IG: Carousel</div><div class="cal-ev">X: Thread</div></div><div class="cal-cell"><div class="cal-day">5</div><div class="cal-ev">TT: Founder</div></div><div class="cal-cell"><div class="cal-day">6</div></div><div class="cal-cell"><div class="cal-day">7</div><div class="cal-ev li">LI: Case study</div></div><div class="cal-cell" style="opacity:0.4"><div class="cal-day">8</div></div><div class="cal-cell" style="opacity:0.4"><div class="cal-day">9</div></div><div class="cal-cell"><div class="cal-day">10</div><div class="cal-ev li">LI: Authority</div></div><div class="cal-cell"><div class="cal-day">11</div><div class="cal-ev">FB: Service</div></div><div class="cal-cell"><div class="cal-day">12</div><div class="cal-ev ig">IG: Reel</div><div class="cal-ev">X: Insight</div></div><div class="cal-cell"><div class="cal-day">13</div></div><div class="cal-cell"><div class="cal-day">14</div><div class="cal-ev">YT: Short</div></div><div class="cal-cell" style="opacity:0.35"><div class="cal-day">15</div></div><div class="cal-cell" style="opacity:0.35"><div class="cal-day">16</div></div></div></div>
+      </div>
+
+      <!-- ══ ANALYTICS ══ -->
+      <div class="page" id="page-analytics">
+        <div class="metrics-row"><div class="m-box"><div class="m-lbl"><i data-lucide="eye" style="width:11px;height:11px"></i> Total Reach</div><div class="m-val">12.4K</div><div class="m-trend"><i data-lucide="trending-up" style="width:11px;height:11px"></i> +18% MoM</div></div><div class="m-box"><div class="m-lbl"><i data-lucide="users" style="width:11px;height:11px"></i> Leads</div><div class="m-val">67</div><div class="m-trend"><i data-lucide="trending-up" style="width:11px;height:11px"></i> +26% MoM</div></div><div class="m-box"><div class="m-lbl"><i data-lucide="trophy" style="width:11px;height:11px"></i> Best Platform</div><div class="m-val" style="font-size:18px;padding-top:4px">LinkedIn</div><div class="m-trend dim">42% of leads</div></div><div class="m-box"><div class="m-lbl"><i data-lucide="star" style="width:11px;height:11px"></i> Top Post Type</div><div class="m-val" style="font-size:18px;padding-top:4px">Authority</div><div class="m-trend dim">2.4× engagement</div></div></div>
+        <div class="card"><div class="card-t"><i data-lucide="bar-chart-3" style="width:15px;height:15px"></i> Leads by Platform</div><div class="bar-chart" style="margin-top:14px"><div class="bar-row"><span class="bar-lbl">LinkedIn</span><div class="bar-track"><div class="bar-fill" style="width:78%"></div></div><span class="bar-val">31 leads</span></div><div class="bar-row"><span class="bar-lbl">Instagram</span><div class="bar-track"><div class="bar-fill" style="width:45%"></div></div><span class="bar-val">14 leads</span></div><div class="bar-row"><span class="bar-lbl">X</span><div class="bar-track"><div class="bar-fill" style="width:32%"></div></div><span class="bar-val">10 leads</span></div><div class="bar-row"><span class="bar-lbl">TikTok</span><div class="bar-track"><div class="bar-fill" style="width:26%"></div></div><span class="bar-val">8 leads</span></div><div class="bar-row"><span class="bar-lbl">Facebook</span><div class="bar-track"><div class="bar-fill" style="width:13%"></div></div><span class="bar-val">4 leads</span></div></div></div>
+      </div>
+
+      <!-- ══ ADMIN: QUOTE STUDIO ══ -->
+      <div class="page" id="page-quotestudio">
+        <div class="admin-panel">
+          <div class="admin-panel-hdr">
+            <i data-lucide="image" style="width:15px;height:15px"></i>
+            <span style="font-size:13px;font-weight:500">Quote Card Studio</span>
+            <div class="admin-tag">Admin Only</div>
+            <span style="font-size:11px;color:var(--wh4);margin-left:8px">Create, regenerate, and export quote graphics for @AletheiaHQ and @yourhandle</span>
+          </div>
+          <div class="quote-studio-grid">
+            <div class="qs-left">
+              <div class="f-grp"><label class="f-lbl">Quote text</label><textarea class="f-inp" id="qt" style="height:80px;resize:none">You don't need more time, you need less waste.</textarea></div>
+              <div class="f-grp"><label class="f-lbl">Attribution</label><select class="f-inp" id="qattr"><option>Your Name · @yourhandle</option><option>@AletheiaHQ</option><option>Your Business · @AsamoahGroup</option><option>Custom</option></select></div>
+              <div class="f-grp"><label class="f-lbl">Quote style</label><div class="style-picker">
+                <div class="style-opt active" onclick="setQStyle('dark',this)"><div class="style-preview" style="background:#000;display:flex;align-items:center;justify-content:center;font-size:8px;color:rgba(255,255,255,0.4)">B/W BG</div>Black</div>
+                <div class="style-opt" onclick="setQStyle('minimal',this)"><div class="style-preview" style="background:#000;display:flex;align-items:center;justify-content:center;font-size:8px;color:rgba(255,255,255,0.4)">Pure</div>Minimal</div>
+                <div class="style-opt" onclick="setQStyle('charcoal',this)"><div class="style-preview" style="background:#333;display:flex;align-items:center;justify-content:center;font-size:8px;color:rgba(255,255,255,0.4)">Char</div>Charcoal</div>
+                <div class="style-opt" onclick="setQStyle('white',this)"><div class="style-preview" style="background:#fff;display:flex;align-items:center;justify-content:center;font-size:8px;color:rgba(0,0,0,0.4)">Light</div>White</div>
+                <div class="style-opt" onclick="setQStyle('photo',this)"><div class="style-preview" style="background:linear-gradient(135deg,#111,#333);display:flex;align-items:center;justify-content:center;font-size:8px;color:rgba(255,255,255,0.4)">📷</div>Photo</div>
+                <div class="style-opt" onclick="setQStyle('split',this)"><div class="style-preview" style="background:linear-gradient(90deg,#000 50%,#fff 50%);"></div>Split</div>
+              </div></div>
+              <div class="f-grp"><label class="f-lbl">Format</label><div style="display:flex;gap:6px"><div class="chip active" onclick="setQFormat('square',this)">1:1 Square</div><div class="chip" onclick="setQFormat('portrait',this)">9:16 Portrait</div><div class="chip" onclick="setQFormat('wide',this)">16:9 Wide</div></div></div>
+              <div class="f-grp"><label class="f-lbl">Background photo</label>
+                <div class="bg-opts">
+                  <div><div class="bg-opt active" id="bg0" onclick="setBg(0,this)" style="background:#000"></div><div class="bg-label">None</div></div>
+                  <div><div class="bg-opt" id="bg1" onclick="setBg(1,this)" style="background-image:url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=200&q=60')"></div><div class="bg-label">Desk</div></div>
+                  <div><div class="bg-opt" id="bg2" onclick="setBg(2,this)" style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=60')"></div><div class="bg-label">Man</div></div>
+                  <div><div class="bg-opt" id="bg3" onclick="setBg(3,this)" style="background-image:url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=200&q=60')"></div><div class="bg-label">Business</div></div>
+                  <div><div class="bg-opt" id="bg4" onclick="setBg(4,this)" style="background-image:url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=200&q=60')"></div><div class="bg-label">Books</div></div>
+                  <div><div class="bg-opt" id="bg5" onclick="setBg(5,this)" style="background-image:url('https://images.unsplash.com/photo-1501139083538-0139583c060f?w=200&q=60')"></div><div class="bg-label">Clock</div></div>
+                  <div><div class="bg-opt" id="bg6" onclick="setBg(6,this)" style="background-image:url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=200&q=60')"></div><div class="bg-label">City</div></div>
+                  <div><div class="bg-opt" id="bg7" onclick="setBg(7,this)" style="background-image:url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=200&q=60')"></div><div class="bg-label">Tech</div></div>
+                </div>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button class="btn-wh" onclick="updateQuoteCard()"><i data-lucide="refresh-cw" style="width:13px;height:13px"></i> Update Preview</button>
+                <button class="btn-s ow" onclick="regenerateQuote()"><i data-lucide="wand-2" style="width:13px;height:13px"></i> AI Generate Quote</button>
+                <button class="btn-s" onclick="toast('Quote card exported as PNG')"><i data-lucide="download" style="width:13px;height:13px"></i> Export PNG</button>
+              </div>
+              <div class="divider"></div>
+              <div style="margin-top:4px">
+                <div style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px">Category</div>
+                <div class="chip-row">
+                  <div class="chip active" onclick="setQuoteCat('mindset',this)">Mindset</div>
+                  <div class="chip" onclick="setQuoteCat('time',this)">Time</div>
+                  <div class="chip" onclick="setQuoteCat('discipline',this)">Discipline</div>
+                  <div class="chip" onclick="setQuoteCat('wisdom',this)">Wisdom</div>
+                  <div class="chip" onclick="setQuoteCat('money',this)">Money</div>
+                  <div class="chip" onclick="setQuoteCat('leadership',this)">Leadership</div>
+                  <div class="chip" onclick="setQuoteCat('health',this)">Health</div>
+                  <div class="chip" onclick="setQuoteCat('faith',this)">Faith</div>
+                  <div class="chip" onclick="setQuoteCat('business',this)">Business</div>
+                  <div class="chip" onclick="setQuoteCat('life',this)">Life</div>
+                </div>
+              </div>
+            </div>
+            <div class="qs-right">
+              <div style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;align-self:flex-start">Live Preview</div>
+              <!-- QUOTE CARD LIVE PREVIEW -->
+              <div class="quote-canvas" id="qcard" style="max-width:380px;width:100%">
+                <div class="quote-canvas-inner">
+                  <div class="qc-bg" id="qc-bg" style="display:none"></div>
+                  <div class="qc-overlay" id="qc-ov" style="display:none"></div>
+                  <div class="qc-content">
+                    <div class="qc-profile">
+                      <div class="qc-avt" id="qc-avt" style="background:var(--wh2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--bk)">FA</div>
+                      <div><div class="qc-name" id="qc-name">Your Name</div><div class="qc-handle" id="qc-handle">@yourhandle</div></div>
+                    </div>
+                    <div class="qc-quote">
+                      <div class="qc-quote-text" id="qc-text">"You don't need more time, you need less waste."</div>
+                    </div>
+                    <div class="qc-brand" id="qc-brand">@AletheiaHQ · aletheiahq</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- BATCH PREVIEW — shows multiple cards like Frank's existing posts -->
+              <div style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.8px;margin-top:16px;margin-bottom:8px;align-self:flex-start">Queue (generated quotes)</div>
+              <div style="display:flex;flex-direction:column;gap:8px;width:100%;max-width:380px" id="quote-queue">
+                <div style="background:var(--bk2);border:1px solid var(--bk3);padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px">
+                  <div style="font-size:12px;color:var(--wh2);font-family:'Cormorant Garamond',serif;font-style:italic;flex:1">"Time punishes indecision more than mistakes."</div>
+                  <div style="display:flex;gap:5px;flex-shrink:0"><button class="btn-s" onclick="loadQuote('Time punishes indecision more than mistakes.',this)"><i data-lucide="eye" style="width:11px;height:11px"></i></button><button class="btn-s wh"><i data-lucide="share-2" style="width:11px;height:11px"></i></button></div>
+                </div>
+                <div style="background:var(--bk2);border:1px solid var(--bk3);padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px">
+                  <div style="font-size:12px;color:var(--wh2);font-family:'Cormorant Garamond',serif;font-style:italic;flex:1">"If you waste time, you're borrowing from your future."</div>
+                  <div style="display:flex;gap:5px;flex-shrink:0"><button class="btn-s" onclick="loadQuote('If you waste time, you\'re borrowing from your future.',this)"><i data-lucide="eye" style="width:11px;height:11px"></i></button><button class="btn-s wh"><i data-lucide="share-2" style="width:11px;height:11px"></i></button></div>
+                </div>
+                <div style="background:var(--bk2);border:1px solid var(--bk3);padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px">
+                  <div style="font-size:12px;color:var(--wh2);font-family:'Cormorant Garamond',serif;font-style:italic;flex:1">"Money respects structure more than ambition."</div>
+                  <div style="display:flex;gap:5px;flex-shrink:0"><button class="btn-s" onclick="loadQuote('Money respects structure more than ambition.',this)"><i data-lucide="eye" style="width:11px;height:11px"></i></button><button class="btn-s wh"><i data-lucide="share-2" style="width:11px;height:11px"></i></button></div>
+                </div>
+                <div style="background:var(--bk2);border:1px solid var(--bk3);padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px">
+                  <div style="font-size:12px;color:var(--wh2);font-family:'Cormorant Garamond',serif;font-style:italic;flex:1">"Ego builds walls, but wisdom builds bridges."</div>
+                  <div style="display:flex;gap:5px;flex-shrink:0"><button class="btn-s" onclick="loadQuote('Ego builds walls, but wisdom builds bridges.',this)"><i data-lucide="eye" style="width:11px;height:11px"></i></button><button class="btn-s wh"><i data-lucide="share-2" style="width:11px;height:11px"></i></button></div>
+                </div>
+              </div>
+              <button class="btn-s wh" style="margin-top:10px;width:100%;max-width:380px" onclick="genMoreQuotes()"><i data-lucide="wand-2" style="width:12px;height:12px"></i> Generate 10 More Quotes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ ADMIN: ALETHEIAHQ AGENT ══ -->
+      <div class="page" id="page-agent">
+        <div class="admin-panel">
+          <div class="admin-panel-hdr">
+            <i data-lucide="cpu" style="width:15px;height:15px"></i>
+            <span style="font-size:13px;font-weight:500">Aletheiahq Agent</span>
+            <div class="admin-tag">Admin Only</div>
+            <span style="font-size:11px;color:var(--wh4);margin-left:8px">Your personal AI strategist — knows all Your Business ventures, your brand voice, and your mission</span>
+          </div>
+          <div class="two-col" style="padding:20px">
+            <div>
+              <div style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px">Agent Context</div>
+              <div style="background:var(--bk2);border:1px solid var(--bk3);padding:14px;margin-bottom:10px">
+                <div style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">Identity</div>
+                <div style="font-size:12px;color:var(--wh2);line-height:1.7">I am the Aletheiahq Agent — the AI behind Your Name's content strategy. I know every Your Business venture, the OIA methodology, Frank's voice, brand standards, and content goals. I operate in pure black and white. I generate quotes, posts, strategies, lead follow-ups, and business content on demand.</div>
+              </div>
+              <div style="background:var(--bk2);border:1px solid var(--bk3);padding:14px;margin-bottom:10px">
+                <div style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">Ventures I serve</div>
+                <div style="display:flex;flex-direction:column;gap:5px">
+                  <div style="display:flex;align-items:center;gap:8px;font-size:12px"><div style="width:8px;height:8px;background:var(--wh);flex-shrink:0"></div>Your Business — Strategy & Operations consultancy</div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:12px"><div style="width:8px;height:8px;background:var(--wh3);flex-shrink:0"></div>CareBridge OS — Healthcare platform</div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:12px"><div style="width:8px;height:8px;background:var(--wh3);flex-shrink:0"></div>NorthBridge Concierge — Concierge services</div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:12px"><div style="width:8px;height:8px;background:var(--wh3);flex-shrink:0"></div>MeetProf — Professional networking</div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:12px"><div style="width:8px;height:8px;background:var(--wh3);flex-shrink:0"></div>AmeriSprint — Sprint methodology</div>
+                </div>
+              </div>
+              <div style="background:var(--bk2);border:1px solid var(--bk3);padding:14px">
+                <div style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">Brand rules</div>
+                <div style="font-size:12px;color:var(--wh2);line-height:1.8">Pure black and white palette. No colour. Cormorant Garamond for quotes and display. DM Sans for body. All content is bold, direct, and zero-filler. Every quote, post, and graphic carries authority. Social handles: @AletheiaHQ · @yourhandle · @AsamoahGroup</div>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px">Command the Agent</div>
+              <div style="background:var(--bk2);border:1px solid var(--bk3);padding:14px;max-height:280px;overflow-y:auto;margin-bottom:10px" id="agent-chat">
+                <div style="margin-bottom:12px">
+                  <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.5px;color:var(--wh4);margin-bottom:4px">Aletheiahq Agent</div>
+                  <div style="font-size:12px;color:var(--wh2);line-height:1.7;padding:10px 12px;background:var(--bk3);border-left:2px solid var(--wh)">Ready, Frank. I know your brand, your ventures, and your voice. Tell me what to create — a quote, a strategy, a post, a follow-up message, or a content plan for any of your platforms. I'll deliver it in pure black and white brand standard. What do you need?</div>
+                </div>
+              </div>
+              <div class="f-grp"><label class="f-lbl">Command</label><textarea class="f-inp" style="height:65px;resize:none" id="agent-cmd" placeholder="e.g. Generate 5 new discipline quotes in my voice and format them for Instagram… or: Write a LinkedIn post about CareBridge OS targeting healthcare directors…"></textarea></div>
+              <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px">
+                <button class="btn-s" onclick="agentCmd('Generate 5 new quotes on discipline in my voice')">5 discipline quotes</button>
+                <button class="btn-s" onclick="agentCmd('Write a LinkedIn post about CareBridge OS')">CareBridge post</button>
+                <button class="btn-s" onclick="agentCmd('Create a content plan for NorthBridge Concierge this week')">NorthBridge plan</button>
+                <button class="btn-s" onclick="agentCmd('Generate a follow-up message for a warm lead')>Lead follow-up</button>
+              </div>
+              <button class="btn-wh" onclick="runAgent()"><i data-lucide="cpu" style="width:13px;height:13px"></i> Run Agent</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SETTINGS ══ -->
+      <div class="page" id="page-settings">
+        <div style="max-width:500px">
+          <div class="card"><div class="card-t"><i data-lucide="user" style="width:15px;height:15px"></i> Account</div><div style="margin-top:12px"><div class="f-grp"><label class="f-lbl">Full name</label><input class="f-inp" placeholder="Your full name"/></div><div class="f-grp"><label class="f-lbl">Email</label><input class="f-inp" placeholder="your@email.com"/></div><div class="f-grp"><label class="f-lbl">Organisation</label><input class="f-inp" value="" placeholder="Your business name"/></div><button class="btn-s wh" onclick="toast('Saved')"><i data-lucide="check" style="width:12px;height:12px"></i> Save</button></div></div>
+          <div class="card"><div class="card-t"><i data-lucide="credit-card" style="width:15px;height:15px"></i> Billing</div><div class="row-item"><span style="font-size:13px">Growth Plan — Monthly</span><span class="badge b-ok">Active</span></div><div class="row-item"><span style="font-size:12px;color:var(--wh4)">$79/month · Renews monthly</span><button class="btn-s ow" onclick="toast('Opening Stripe portal…')"><i data-lucide="external-link" style="width:11px;height:11px"></i> Manage</button></div></div>
+          <div class="card" id="admin-creds" style="display:none"><div class="card-t"><i data-lucide="shield" style="width:15px;height:15px"></i> Admin Access</div><div class="divider"></div><div style="background:var(--bk2);border:1px solid var(--bk3);border-left:2px solid var(--wh);padding:12px;margin-top:10px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:var(--wh4);margin-bottom:8px">Developer / Admin credentials</div><div style="display:flex;flex-direction:column;gap:5px;font-size:12px"><div><span style="color:var(--wh4)">Email:</span> <span style="font-family:'DM Mono',monospace;color:var(--wh2)">admin@aletheiahq.com</span></div><div><span style="color:var(--wh4)">Password:</span> <span style="font-family:'DM Mono',monospace;color:var(--wh2)">ALETHEIA2026#ADMIN</span></div><div><span style="color:var(--wh4)">Role:</span> <span class="badge b-wh" style="font-size:9px">Super Admin</span></div></div></div></div>
+          <div class="card"><div class="card-t"><i data-lucide="mic" style="width:15px;height:15px"></i> Brand Voice</div><div style="margin-top:10px"><div class="f-grp"><label class="f-lbl">Tone</label><select class="f-inp"><option>Professional + Authoritative</option><option>Direct + Bold</option><option>Conversational</option></select></div><div class="f-grp"><label class="f-lbl">Avoid</label><input class="f-inp" placeholder="Competitor names, pricing comparisons…"/></div><button class="btn-s wh" onclick="toast('Voice saved')"><i data-lucide="check" style="width:12px;height:12px"></i> Save</button></div></div>
+        </div>
+      </div>
+
+    </div><!-- /content-area -->
+
+    <!-- APP FOOTER -->
+    <div style="border-top:1px solid var(--bk3);padding:11px 20px;background:var(--bk1);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;flex-shrink:0">
+      <div style="display:flex;gap:16px;flex-wrap:wrap">
+        <a href="https://asamoahgroup.com" target="_blank" class="port-link" style="font-size:11px"><i data-lucide="external-link" style="width:10px;height:10px"></i> asamoahgroup.com</a>
+        <a href="https://carebridgeos.care" target="_blank" class="port-link" style="font-size:11px"><i data-lucide="external-link" style="width:10px;height:10px"></i> carebridgeos.care</a>
+        <a href="https://northbridgeconcierge.com" target="_blank" class="port-link" style="font-size:11px"><i data-lucide="external-link" style="width:10px;height:10px"></i> northbridgeconcierge.com</a>
+      </div>
+      <div style="font-size:10px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.8px">Aletheiahq © 2026</div>
+    </div>
+  </div><!-- /main-area -->
+</div><!-- /s-app -->
+
+<!-- TOAST -->
+<div class="toast" id="toast-el"><i data-lucide="check" style="width:13px;height:13px;flex-shrink:0"></i><span id="toast-msg"></span></div>
+
+<script>
+lucide.createIcons();
+
+// ── BILLING TOGGLE & PLAN SELECTION ──
+let sPlanKey='growth';
+let sBilling='monthly';
+
+const pricing={
+  monthly:{
+    starter:{mo:'$29',btn:'Pay $29.00',total:'',saving:'',annualNote:'',billingNote:'Monthly · Cancel anytime · 14-day guarantee'},
+    growth:{mo:'$79',btn:'Pay $79.00',total:'',saving:'',annualNote:'',billingNote:'Monthly · Cancel anytime · 14-day guarantee'},
+    agency:{mo:'$199',btn:'Pay $199.00',total:'',saving:'',annualNote:'',billingNote:'Monthly · Cancel anytime · 14-day guarantee'}
+  },
+  annual:{
+    starter:{mo:'$22',btn:'Pay $261.00 annually',total:'$261 billed today',saving:'You save $87 vs monthly',annualNote:'$261 billed annually',billingNote:'Annual plan — 2 months free · 14-day guarantee'},
+    growth:{mo:'$59',btn:'Pay $711.00 annually',total:'$711 billed today',saving:'You save $237 vs monthly',annualNote:'$711 billed annually',billingNote:'Annual plan — 2 months free · 14-day guarantee'},
+    agency:{mo:'$149',btn:'Pay $1,791.00 annually',total:'$1,791 billed today',saving:'You save $597 vs monthly',annualNote:'$1,791 billed annually',billingNote:'Annual plan — 2 months free · 14-day guarantee'}
+  }
+};
+
+const pNames={starter:'Starter Plan',growth:'Growth Plan',agency:'Agency Plan'};
+
+function setBilling(type){
+  sBilling=type;
+  const tog_m=document.getElementById('tog-monthly');
+  const tog_a=document.getElementById('tog-annual');
+  if(type==='monthly'){
+    tog_m.style.cssText='padding:7px 18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;cursor:pointer;background:var(--wh);color:var(--bk);transition:all 0.2s';
+    tog_a.style.cssText='padding:7px 18px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;cursor:pointer;color:var(--wh4);transition:all 0.2s;display:flex;align-items:center;gap:6px';
+    ['starter','growth','agency'].forEach(p=>{
+      document.getElementById('price-'+p).innerHTML=pricing.monthly[p].mo+'<span>/mo</span>';
+      document.getElementById('annual-note-'+p).style.display='none';
+    });
+    document.getElementById('savings-bar').style.display='none';
+  } else {
+    tog_a.style.cssText='padding:7px 18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;cursor:pointer;background:var(--wh);color:var(--bk);transition:all 0.2s;display:flex;align-items:center;gap:6px';
+    tog_m.style.cssText='padding:7px 18px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;cursor:pointer;color:var(--wh4);transition:all 0.2s';
+    ['starter','growth','agency'].forEach(p=>{
+      document.getElementById('price-'+p).innerHTML=pricing.annual[p].mo+'<span>/mo</span>';
+      document.getElementById('annual-note-'+p).style.display='block';
+      document.getElementById('annual-note-'+p).textContent=pricing.annual[p].annualNote;
+    });
+    document.getElementById('savings-bar').style.display='flex';
+  }
+  lucide.createIcons();
+}
+
+function selPlan(k){
+  document.querySelectorAll('.pc').forEach(c=>c.classList.remove('sel'));
+  document.getElementById('pc-'+k[0]).classList.add('sel');
+  sPlanKey=k;
+}
+
+// ── SCREENS ──
+function showScreen(id){
+  ['s-landing','s-login','s-register','s-payment','s-confirm'].forEach(s=>{document.getElementById(s).style.display='none';});
+  document.getElementById(id).style.display='flex';
+  // When going to payment, inject selected plan + billing info
+  if(id==='s-payment'){
+    const p=pricing[sBilling][sPlanKey];
+    const isAnnual=sBilling==='annual';
+    document.getElementById('pp-n').textContent=pNames[sPlanKey]+(isAnnual?' — Annual':'');
+    document.getElementById('pp-billing-note').textContent=p.billingNote;
+    document.getElementById('pp-p').innerHTML=p.mo+'<span style="font-size:13px;font-weight:300;color:var(--wh4);font-family:\'DM Sans\',sans-serif">/mo</span>';
+    // Annual saving callout
+    const savingEl=document.getElementById('pp-annual-saving');
+    const totalEl=document.getElementById('pp-total-note');
+    if(isAnnual&&p.saving){
+      savingEl.textContent=p.saving;savingEl.style.display='block';
+      totalEl.textContent=p.total;totalEl.style.display='block';
+    } else {
+      savingEl.style.display='none';totalEl.style.display='none';
+    }
+    document.getElementById('pay-txt').textContent=p.btn+' — Secured by Stripe';
+  }
+  lucide.createIcons();
+}
+function doLogin(){
+  const em=document.getElementById('li-em').value.trim();
+  const pw=document.getElementById('li-pw').value.trim();
+  const isAdmin=(em==='admin@aletheiahq.com'&&pw==='ALETHEIA2026#ADMIN');
+  goAppDirect(isAdmin);
+}
+function goAppDirect(isAdmin){
+  ['s-landing','s-login','s-register','s-payment','s-confirm'].forEach(s=>{document.getElementById(s).style.display='none';});
+  document.getElementById('s-app').classList.add('show');
+  if(isAdmin){
+    document.getElementById('admin-section').style.display='block';
+    document.getElementById('nav-quotestudio').style.display='flex';
+    document.getElementById('nav-agent').style.display='flex';
+    document.getElementById('admin-crown').style.display='flex';
+    document.getElementById('admin-creds').style.display='block';
+    document.getElementById('s-avt').textContent='FA';
+    document.getElementById('s-uname').textContent='Your Name';
+    document.getElementById('s-uemail').textContent='admin@aletheiahq.com';
+    document.getElementById('sidebar-plan-lbl').textContent='Super Admin';
+    document.getElementById('sidebar-plan-use').textContent='Unlimited access';
+    document.getElementById('sidebar-plan-bar').style.width='100%';
+    toast('Admin access granted — all features unlocked');
+  }
+  checkMobile();
+  lucide.createIcons();
+}
+function goConfirm(){
+  const btn=document.getElementById('pay-btn');
+  btn.innerHTML='<div style="width:13px;height:13px;border:1.5px solid rgba(0,0,0,0.3);border-top-color:#000;border-radius:50%;animation:spin 0.8s linear infinite"></div> Processing…';
+  btn.disabled=true;
+  setTimeout(()=>{showScreen('s-confirm');lucide.createIcons();},1800);
+}
+function goApp(){goAppDirect(false);}
+function signOut(){document.getElementById('s-app').classList.remove('show');showScreen('s-landing');}
+
+// ── PAGES ──
+const pTitles={dashboard:'Dashboard',pipeline:'1-Minute Pipeline',autopublish:'Auto-Publish Engine',generate:'Generate Campaign',posts:'Post Library',analyzer:'Profile Analyzer',repurpose:'Repurpose Engine',ghostwriter:'Ghost Writer',leads:'Lead Engine',manager:'AI Manager',calendar:'Content Calendar',analytics:'Analytics',quotestudio:'Quote Card Studio',agent:'Aletheiahq Agent',settings:'Settings'};
+function showPage(id,navEl){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(n=>n.classList.remove('active'));
+  const pg=document.getElementById('page-'+id);if(pg)pg.classList.add('active');
+  if(navEl)navEl.classList.add('active');
+  document.getElementById('page-title').textContent=pTitles[id]||id;
+  if(window.innerWidth<=768)closeMob();
+  lucide.createIcons();
+}
+
+// ── SIDEBAR ──
+let sbCol=false;
+function toggleSidebar(){sbCol=!sbCol;document.getElementById('sidebar').classList.toggle('col',sbCol);}
+function openMob(){document.getElementById('sidebar').classList.add('mob-open');document.getElementById('mob-ov').style.display='block';}
+function closeMob(){document.getElementById('sidebar').classList.remove('mob-open');document.getElementById('mob-ov').style.display='none';}
+function checkMobile(){const m=window.innerWidth<=768;document.getElementById('mob-btn').style.display=m?'flex':'none';if(m)document.getElementById('sidebar').classList.add('col');}
+window.addEventListener('resize',checkMobile);
+
+// ── CHIPS / TABS ──
+function fchip(el){const p=el.closest('.chip-row')||el.parentElement;p.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');}
+function stab(el,t){el.closest('.tab-row').querySelectorAll('.tab').forEach(tab=>tab.classList.remove('active'));el.classList.add('active');['lp','ls','lm'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display=id===t?'block':'none';});}
+function selPost(el){document.querySelectorAll('.post-card').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+function cp(e){e.stopPropagation();toast('Copied to clipboard');}
+
+// ── TOAST ──
+function toast(msg){const el=document.getElementById('toast-el');document.getElementById('toast-msg').textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000);}
+
+// ── GENERATION ──
+function runGen(){
+  document.getElementById('gen-ov').classList.add('show');
+  let count=0;
+  function setGS(n,state){
+    const el=document.getElementById('gs'+n);el.className='gen-stage '+state;
+    const ic=document.getElementById('gi'+n);
+    if(state==='active'){const sp=document.createElement('div');sp.className='spinner';sp.id='gi'+n;ic.replaceWith(sp);}
+    else if(state==='done'){const chk=document.createElement('i');chk.setAttribute('data-lucide','check-circle');chk.style.cssText='width:12px;height:12px';const cur=document.getElementById('gi'+n);if(cur)cur.replaceWith(chk);}
+    lucide.createIcons();
+  }
+  const ctr=setInterval(()=>{count=Math.min(count+Math.floor(Math.random()*8)+3,114);document.getElementById('gcn').textContent=count;if(count>=114)clearInterval(ctr);},120);
+  setGS(1,'active');
+  setTimeout(()=>{setGS(1,'done');setGS(2,'active');},1700);
+  setTimeout(()=>{setGS(2,'done');setGS(3,'active');},3400);
+  setTimeout(()=>{setGS(3,'done');setGS(4,'active');},5600);
+  setTimeout(()=>{setGS(4,'done');document.getElementById('gen-done').style.display='block';lucide.createIcons();},7200);
+}
+
+// ── PROFILE ANALYSIS ──
+function runAnalysis(){
+  document.getElementById('ap-prog').style.display='block';
+  document.getElementById('ap-result').style.display='none';
+  function setAS(n,state){
+    const el=document.getElementById('as'+n);el.className='a-stage '+state;
+    const ic=el.querySelector('.a-stage-ic');
+    const icons=['globe','brain','lightbulb','file-text'];
+    const cols={wait:'var(--wh4)',active:'var(--wh2)',done:'var(--wh)'};
+    const icon=state==='active'?'loader-2':state==='done'?'check':icons[n-1];
+    ic.innerHTML='<i data-lucide="'+icon+'" style="width:13px;height:13px;color:'+cols[state]+(state==='active'?';animation:spin 0.8s linear infinite':'')+'" aria-hidden="true"></i>';
+    lucide.createIcons();
+  }
+  setAS(1,'active');
+  setTimeout(()=>{setAS(1,'done');setAS(2,'active');},1400);
+  setTimeout(()=>{setAS(2,'done');setAS(3,'active');},2800);
+  setTimeout(()=>{setAS(3,'done');setAS(4,'active');},4200);
+  setTimeout(()=>{setAS(4,'done');setTimeout(()=>{document.getElementById('ap-prog').style.display='none';document.getElementById('ap-result').style.display='block';lucide.createIcons();},400);},5600);
+}
+
+// ── REPURPOSE ──
+function runRepurpose(btn){
+  btn.innerHTML='<div style="width:13px;height:13px;border:1.5px solid rgba(0,0,0,0.3);border-top-color:#000;border-radius:50%;animation:spin 0.8s linear infinite"></div> Creating…';
+  btn.disabled=true;
+  setTimeout(()=>{document.getElementById('rp-res').style.display='block';btn.innerHTML='<i data-lucide="check" style="width:12px;height:12px"></i> Done — 8 posts';btn.disabled=false;lucide.createIcons();document.getElementById('rp-res').scrollIntoView({behavior:'smooth',block:'nearest'});},2800);
+}
+
+// ── GHOST WRITER ──
+function runGhost(btn){
+  btn.innerHTML='<div style="width:13px;height:13px;border:1.5px solid rgba(0,0,0,0.3);border-top-color:#000;border-radius:50%;animation:spin 0.8s linear infinite"></div> Writing…';
+  btn.disabled=true;
+  setTimeout(()=>{document.getElementById('gw-res').style.display='block';btn.innerHTML='<i data-lucide="check" style="width:12px;height:12px"></i> Post written';btn.disabled=false;lucide.createIcons();document.getElementById('gw-res').scrollIntoView({behavior:'smooth',block:'nearest'});},3200);
+}
+
+// ── QUOTE STUDIO ──
+const bgUrls=['','https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&q=80','https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80','https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&q=80','https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&q=80','https://images.unsplash.com/photo-1501139083538-0139583c060f?w=600&q=80','https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&q=80','https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&q=80'];
+let curBgIdx=0;
+let curStyle='dark';
+function setBg(idx,el){
+  document.querySelectorAll('.bg-opt').forEach(b=>b.classList.remove('active'));el.classList.add('active');curBgIdx=idx;updateQuoteCard();
+}
+function setQStyle(s,el){
+  document.querySelectorAll('.style-opt').forEach(o=>o.classList.remove('active'));el.classList.add('active');curStyle=s;updateQuoteCard();
+}
+function setQFormat(f,el){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');
+  const card=document.getElementById('qcard');
+  card.classList.remove('qf-portrait','qf-wide');
+  if(f==='portrait')card.classList.add('qf-portrait');
+  else if(f==='wide')card.classList.add('qf-wide');
+}
+function setQuoteCat(cat,el){
+  document.querySelectorAll('.chip-row .chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');
+}
+function updateQuoteCard(){
+  const qt=document.getElementById('qt').value;
+  const qattr=document.getElementById('qattr').value;
+  document.getElementById('qc-text').textContent='"'+qt+'"';
+  const parts=qattr.split('·');
+  document.getElementById('qc-name').textContent=parts[0]?.trim()||'Your Name';
+  document.getElementById('qc-handle').textContent=parts[1]?.trim()||'@yourhandle';
+  const card=document.getElementById('qcard');
+  card.className='quote-canvas';
+  const bg=document.getElementById('qc-bg');const ov=document.getElementById('qc-ov');
+  if(curStyle==='minimal'){bg.style.display='none';ov.style.display='none';card.style.background='#000';}
+  else if(curStyle==='charcoal'){bg.style.display='none';ov.style.display='none';card.style.background='#333';}
+  else if(curStyle==='white'){bg.style.display='none';ov.style.display='none';card.style.background='#fff';}
+  else if(curBgIdx>0){bg.style.display='block';ov.style.display='block';bg.style.backgroundImage='url('+bgUrls[curBgIdx]+')';}
+  else{bg.style.display='none';ov.style.display='none';card.style.background='#000';}
+  toast('Preview updated');
+}
+function loadQuote(q,el){document.getElementById('qt').value=q;updateQuoteCard();}
+function regenerateQuote(){
+  const cats={'mindset':['You cannot outperform your self-concept.','The mind is the first territory to conquer.','Your thoughts today are your reality tomorrow.'],'time':['Time punishes indecision more than mistakes.','If you waste time, you\'re borrowing from your future.','Time exposes what you truly value.'],'discipline':['Life doesn\'t test intentions — it tests discipline.','Discipline is just choosing your future over your feelings.','The disciplined man is the free man.'],'wisdom':['Ego builds walls, but wisdom builds bridges.','You don\'t find meaning in life — you build it.','Life changes the moment responsibility becomes personal.'],'money':['Money respects structure more than ambition.','Wealth follows systems, not wishes.','The rich build pipelines. The poor carry buckets.'],'leadership':['A leader\'s greatest tool is clarity.','You lead from who you are, not what you say.','Leadership is earned in the moments nobody is watching.'],'health':['Your body is the vehicle for every dream you carry.','Energy is the currency of high performance.','A healthy body amplifies every ambition.'],'faith':['Faith without works is a strategy without execution.','Purpose rooted in faith survives every storm.','The greatest moves are made before the path is clear.'],'business':['Systems don\'t care about your motivation — they run anyway.','Build it to work without you, then step into your purpose.','A business that needs you is a job with a receptionist.'],'life':['You don\'t need permission to become who you were made to be.','The quality of your questions determines the quality of your life.','Growth is the only evidence that you\'re still alive.']};
+  const activeCat=document.querySelector('.chip-row .chip.active')?.textContent?.toLowerCase()||'mindset';
+  const pool=cats[activeCat]||cats.mindset;
+  const q=pool[Math.floor(Math.random()*pool.length)];
+  document.getElementById('qt').value=q;updateQuoteCard();
+}
+function genMoreQuotes(){
+  const newQuotes=['Your silence about your goals protects your energy.','What you tolerate defines what you deserve.','Empty hands are the result of full excuses.','Structure is not a cage — it is the architecture of freedom.','The man who controls his morning controls his life.','Every system you build is a vote for the future you want.','You will not outwork a broken strategy.','Your reputation is built in rooms where you\'re not present.','Authority is never given — it is grown.','The price of discipline is always less than the cost of regret.'];
+  const queue=document.getElementById('quote-queue');
+  newQuotes.forEach(q=>{
+    const div=document.createElement('div');
+    div.style.cssText='background:var(--bk2);border:1px solid var(--bk3);padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px';
+    div.innerHTML='<div style="font-size:12px;color:var(--wh2);font-family:\'Cormorant Garamond\',serif;font-style:italic;flex:1">"'+q+'"</div><div style="display:flex;gap:5px;flex-shrink:0"><button class="btn-s" onclick="loadQuote(\''+q.replace(/'/g,"\\'")+')\',this)"><i data-lucide="eye" style="width:11px;height:11px"></i></button><button class="btn-s wh"><i data-lucide="share-2" style="width:11px;height:11px"></i></button></div>';
+    queue.appendChild(div);
+  });
+  lucide.createIcons();
+  toast('10 new quotes added to queue');
+}
+
+// ── AGENT ──
+function agentCmd(cmd){document.getElementById('agent-cmd').value=cmd;}
+const agentResponses={
+  'Generate 5 new quotes on discipline in my voice':'Here are 5 discipline quotes in your voice:\n\n1. "Life doesn\'t test intentions — it tests discipline."\n\n2. "Discipline is the gap between where you are and where you said you\'d be."\n\n3. "Every undone habit is a debt you\'ll repay with interest."\n\n4. "The disciplined man doesn\'t need motivation — he has structure."\n\n5. "Discipline is choosing the version of yourself you promised to build."\n\nAll 5 have been added to your Quote Studio queue. Format preference: black background, Cormorant Garamond, your handle.',
+  'Write a LinkedIn post about CareBridge OS':'LinkedIn Post — CareBridge OS\n\nMost healthcare platforms are built for administrators, not patients.\n\nCareBridge OS was built the other way around.\n\nWe designed an operating system for care delivery that reduces the friction between families, providers, and coordinators — so the people who need support actually get it, instead of getting lost in handoffs.\n\nWhat we built isn\'t just software. It\'s operational architecture for human services.\n\nIf you\'re in care coordination, case management, or healthcare operations and you\'re tired of systems that add more work than they remove — DM me. I\'ll show you what we built.\n\n@carebridgeos.care\n\n#HealthcareTech #HumanServices #CareCoordination #HealthcareInnovation',
+  'Create a content plan for NorthBridge Concierge this week':'NorthBridge Concierge — This Week\'s Content Plan:\n\nMonday (LinkedIn): "Luxury is not a product — it is the experience of not having to think about logistics." — Authority post establishing NorthBridge positioning.\n\nTuesday (Instagram): Behind-the-scenes of what a concierge day looks like — story-format post.\n\nWednesday (X): Thread on "Why Boston\'s high-net-worth professionals are turning to concierge services in 2026"\n\nThursday (Facebook): Testimonial-style post + lead hook: "What does a typical NorthBridge client look like? DM CONCIERGE."\n\nFriday (LinkedIn): Conversion post: "NorthBridge Concierge now accepting Q4 clients. 3 spots remaining. Link in bio."\n\nAll posts scheduled in your calendar. Black and white graphics queued in Quote Studio.',
+  'Generate a follow-up message for Alex Morgan':'LinkedIn DM — Alex Morgan Follow-up:\n\nSubject: Quick thought on what we discussed\n\n"Alex — I've been thinking about the operational gap you described. It\'s the same pattern I\'ve seen in three of our most successful turnarounds. The bottleneck was never the vision. It was the infrastructure.\n\nI put together a one-page diagnostic that maps exactly where that gap sits for companies at your stage. Takes 5 minutes to complete. No pitch — just clarity.\n\nWould it be worth 15 minutes this week to walk through it together?\n\n— Frank"\n\nSend time recommendation: Tuesday between 8–9am. Engagement score at 88% — this is a high-conversion window.'
+};
+function runAgent(){
+  const cmd=document.getElementById('agent-cmd').value.trim();
+  if(!cmd){toast('Enter a command first');return;}
+  const chat=document.getElementById('agent-chat');
+  // User message
+  const userDiv=document.createElement('div');userDiv.style.marginBottom='12px';
+  userDiv.innerHTML='<div style="font-size:9px;text-transform:uppercase;letter-spacing:0.5px;color:var(--wh4);margin-bottom:4px;text-align:right">You</div><div style="font-size:12px;color:var(--wh3);line-height:1.7;padding:10px 12px;background:var(--bk2);text-align:right">'+cmd+'</div>';
+  chat.appendChild(userDiv);
+  // Agent response
+  const response=agentResponses[cmd]||'Understood, Frank. Processing your request — generating content in Aletheiahq brand standard (pure black and white, no filler, direct authority voice).\n\nContent will be ready in your Post Library and Quote Studio within 60 seconds. Check Dashboard for the update.';
+  setTimeout(()=>{
+    const agentDiv=document.createElement('div');agentDiv.style.marginBottom='12px';
+    agentDiv.innerHTML='<div style="font-size:9px;text-transform:uppercase;letter-spacing:0.5px;color:var(--wh4);margin-bottom:4px">Aletheiahq Agent</div><div style="font-size:12px;color:var(--wh2);line-height:1.8;padding:10px 12px;background:var(--bk3);border-left:2px solid var(--wh);white-space:pre-wrap">'+response+'</div>';
+    chat.appendChild(agentDiv);
+    chat.scrollTop=chat.scrollHeight;
+    document.getElementById('agent-cmd').value='';
+  },1200);
+  chat.scrollTop=chat.scrollHeight;
+}
+
+// ══════════════════════════════════════
+// 1-MINUTE PIPELINE
+// ══════════════════════════════════════
+let pipeEngineChoice='openai';
+let pipeModeChoice='review';
+let pipeStartTime=0;
+
+function pipeUrlChanged(val){
+  const status=document.getElementById('pipe-url-status');
+  const check=document.getElementById('pipe-url-check');
+  if(!val){status.textContent='Enter any public website URL to begin';status.style.color='var(--wh4)';return;}
+  if(val.startsWith('http')){
+    status.textContent='URL looks good — ready to run pipeline';
+    status.style.color='var(--wh2)';
+    if(check)check.style.display='flex';
+  } else {
+    status.textContent='Please enter a full URL starting with https://';
+    status.style.color='var(--wh4)';
+  }
+}
+
+function selectEngine(eng,el){
+  pipeEngineChoice=eng;
+  document.querySelectorAll('.ai-engine-opt').forEach(e=>{
+    e.classList.remove('active');
+    e.style.borderBottom='none';
+  });
+  el.classList.add('active');
+  el.style.borderBottom='2px solid var(--wh)';
+}
+
+function selectMode(mode,el){
+  pipeModeChoice=mode;
+  document.querySelectorAll('.output-mode').forEach(e=>{
+    e.classList.remove('active');
+    e.style.borderColor='var(--bk4)';
+    e.style.background='var(--bk2)';
+    e.querySelectorAll('div').forEach(d=>{if(d.style.color)d.style.color='var(--wh4)';});
+  });
+  el.classList.add('active');
+  el.style.borderColor='var(--wh)';
+  el.style.background='var(--bk3)';
+}
+
+function togglePlat(el){el.classList.toggle('active');}
+
+function setPipeStage(n,state,sub=''){
+  const el=document.getElementById('ps'+n);
+  const ic=document.getElementById('ps'+n+'-ic');
+  const st=document.getElementById('ps'+n+'-status');
+  const sub_el=document.getElementById('ps'+n+'-sub');
+  if(state==='active'){
+    ic.innerHTML='<div style="width:14px;height:14px;border:1.5px solid rgba(255,255,255,0.3);border-top-color:var(--wh);border-radius:50%;animation:spin 0.8s linear infinite"></div>';
+    if(st){st.textContent='Running';st.style.color='var(--wh)';}
+    if(sub&&sub_el)sub_el.textContent=sub;
+    el.style.opacity='1';
+  } else if(state==='done'){
+    ic.innerHTML='<i data-lucide="check" style="width:14px;height:14px;color:var(--wh)"></i>';
+    if(st){st.textContent='Done';st.style.color='var(--wh3)';}
+    el.style.opacity='0.6';
+    lucide.createIcons();
+  } else {
+    if(st){st.textContent='Waiting';st.style.color='var(--wh4)';}
+    el.style.opacity='0.4';
+  }
+}
+
+function runPipeline(){
+  const url=document.getElementById('pipe-url').value.trim();
+  if(!url||!url.startsWith('http')){toast('Enter a valid website URL first');return;}
+
+  // Hide form, show running state
+  document.getElementById('pipeline-form').style.display='none';
+  document.getElementById('pipeline-running').style.display='block';
+  document.getElementById('pipeline-done').style.display='none';
+  pipeStartTime=Date.now();
+
+  // Animate post counter
+  let count=0;
+  const target=114;
+  const ctr=setInterval(()=>{
+    count=Math.min(count+Math.floor(Math.random()*6)+2,target);
+    document.getElementById('pipe-count').textContent=count;
+    if(count>=target)clearInterval(ctr);
+  },180);
+
+  // Stage 1 — Read website
+  setPipeStage(1,'active','Fetching pages, extracting copy and metadata...');
+  setTimeout(()=>{
+    setPipeStage(1,'done');
+    setPipeStage(2,'active','Industry, audiences, brand voice, services, pain points...');
+  },1800);
+
+  // Stage 2 — AI analysis
+  setTimeout(()=>{
+    setPipeStage(2,'done');
+    const engMsg=pipeEngineChoice==='both'?'OpenAI GPT-4o + Claude writing hooks, captions, CTAs...':
+      pipeEngineChoice==='claude'?'Claude writing hooks, captions, CTAs...':'GPT-4o writing hooks, captions, CTAs...';
+    setPipeStage(3,'active',engMsg);
+  },3600);
+
+  // Stage 3 — Generate posts
+  setTimeout(()=>{
+    setPipeStage(3,'done');
+    const modeMsg=pipeModeChoice==='auto'?'Scheduling posts across connected platforms...':
+      pipeModeChoice==='download'?'Packaging CSV + PDF + content calendar...':'Preparing post library for review...';
+    setPipeStage(4,'active',modeMsg);
+  },5800);
+
+  // Stage 4 — Publish/package
+  setTimeout(()=>{
+    setPipeStage(4,'done');
+    const elapsed=Math.round((Date.now()-pipeStartTime)/1000);
+    // Show complete state
+    document.getElementById('pipeline-running').style.display='none';
+    document.getElementById('pipeline-done').style.display='block';
+    document.getElementById('done-count').textContent=target;
+    document.getElementById('done-time').textContent=elapsed;
+    // Fill profile summary based on URL
+    const domain=url.replace('https://','').replace('http://','').split('/')[0];
+    document.getElementById('done-profile').textContent=
+      'Strategy & Operations · Business owners + Executives · Professional-Authoritative · Consulting, OIA, AI Advisory · Operational inefficiency · Systems that run without you';
+    lucide.createIcons();
+    toast(target+' posts generated in '+elapsed+' seconds');
+  },7800);
+}
+
+function resetPipeline(){
+  document.getElementById('pipeline-form').style.display='block';
+  document.getElementById('pipeline-running').style.display='none';
+  document.getElementById('pipeline-done').style.display='none';
+  document.getElementById('pipe-url').value='';
+  document.getElementById('pipe-url-status').textContent='Enter any public website URL to begin';
+  document.getElementById('pipe-url-status').style.color='var(--wh4)';
+  document.getElementById('pipe-count').textContent='0';
+  [1,2,3,4].forEach(n=>setPipeStage(n,'wait'));
+  lucide.createIcons();
+}
+
+// ══════════════════════════════════════
+// AUTO-PUBLISH
+// ══════════════════════════════════════
+function connectPlatform(plat,btn){
+  btn.textContent='Connecting...';
+  btn.disabled=true;
+  setTimeout(()=>{
+    btn.textContent='Connected';
+    btn.className='btn-s';
+    btn.disabled=false;
+    btn.style.color='var(--wh2)';
+    btn.style.borderColor='var(--wh3)';
+    const statusEl=btn.previousElementSibling;
+    if(statusEl){
+      statusEl.textContent='Connected';
+      statusEl.style.color='var(--wh2)';
+    }
+    toast(plat.charAt(0).toUpperCase()+plat.slice(1)+' connected — posts will auto-publish on schedule');
+  },1600);
+}
+
+</body>
+</html>
