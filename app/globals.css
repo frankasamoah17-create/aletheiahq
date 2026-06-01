@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bk: #000;
+  --bk1: #0A0A0A;
+  --bk2: #111;
+  --bk3: #1A1A1A;
+  --bk4: #222;
+  --bk5: #2E2E2E;
+  --wh: #FFF;
+  --wh1: #F5F5F5;
+  --wh2: #E0E0E0;
+  --wh3: #AAAAAA;
+  --wh4: #666;
+}
+
+body {
+  background: var(--bk);
+  color: var(--wh);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
