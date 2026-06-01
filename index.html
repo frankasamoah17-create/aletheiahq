@@ -330,10 +330,19 @@ html,body{height:100%;background:var(--bk);color:var(--wh);font-family:'DM Sans'
   .land-stats{gap:20px}
 }
 </style>
+<!-- Supabase SDK — direct browser auth, no server needed -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+// Supabase client — initialised with your project credentials
+const _sb = supabase.createClient(
+  'https://xflhsiqtovlsyylntacn.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmbGhzcXZ0b3Zsc3l5bG50YWNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNjc0MzgsImV4cCI6MjA5NTg0MzQzOH0.3VcIotQ7FISFLyBanvkzK9e1RTk43oeGRVkHgHKBYaU'
+);
+window.__sb = _sb;
+</script>
 <!-- Function stubs — prevent onclick errors before main script loads -->
 <script>
 function showScreen(id){
-  // Will be redefined by main script — queue the call
   window.__pendingScreen=id;
 }
 function setBilling(type){window.__pendingBilling=type;}
@@ -342,10 +351,7 @@ function showPage(id,el){window.__pendingPage={id,el};}
 function doLogin(){window.__pendingAction='login';}
 function goApp(){window.__pendingAction='goApp';}
 function signOut(){window.__pendingAction='signOut';}
-function toast(msg){
-  // Simple fallback toast before main script
-  console.log('Toast:',msg);
-}
+function toast(msg){console.log('Toast:',msg);}
 </script>
 </head>
 <body>
@@ -504,15 +510,17 @@ function toast(msg){
     <div class="auth-box">
       <div class="auth-logo">Aletheiahq</div>
       <div class="auth-sub">Create your account</div>
-      <div class="f-grp"><label class="f-lbl">Full name</label><input class="f-inp" placeholder="Your full name" placeholder="Your name"/></div>
-      <div class="f-grp"><label class="f-lbl">Email</label><input class="f-inp" type="email" placeholder="your@email.com" placeholder="you@company.com"/></div>
-      <div class="f-grp"><label class="f-lbl">Password</label><input class="f-inp" type="password" placeholder="Min. 8 characters"/></div>
-      <div class="f-grp"><label class="f-lbl">Organisation</label><input class="f-inp" value="" placeholder="Your business name"/></div>
+      <div id="register-error" style="display:none;padding:10px 12px;background:var(--bk3);border-left:2px solid var(--wh3);margin-bottom:14px;font-size:12px;color:var(--wh2)"></div>
+      <div id="register-success" style="display:none;padding:10px 12px;background:var(--bk3);border-left:2px solid var(--wh);margin-bottom:14px;font-size:12px;color:var(--wh2)"></div>
+      <div class="f-grp"><label class="f-lbl">Full name</label><input class="f-inp" id="reg-name" placeholder="Your full name"/></div>
+      <div class="f-grp"><label class="f-lbl">Email</label><input class="f-inp" id="reg-em" type="email" placeholder="you@company.com"/></div>
+      <div class="f-grp"><label class="f-lbl">Password</label><input class="f-inp" id="reg-pw" type="password" placeholder="Min. 8 characters"/></div>
+      <div class="f-grp"><label class="f-lbl">Organisation</label><input class="f-inp" id="reg-org" placeholder="Your business name"/></div>
       <div style="display:flex;gap:7px;padding:10px 12px;background:var(--bk2);border:1px solid var(--bk3);margin-bottom:16px">
         <i data-lucide="lock" style="width:13px;height:13px;flex-shrink:0;margin-top:1px;color:var(--wh2)"></i>
         <span style="font-size:11px;color:var(--wh4);line-height:1.6">Data encrypted. Card details handled entirely by Stripe — never seen by us.</span>
       </div>
-      <button class="btn-wh" onclick="showScreen('s-payment')"><i data-lucide="credit-card" style="width:14px;height:14px"></i> Continue to payment</button>
+      <button class="btn-wh" onclick="doRegister()" id="reg-btn"><i data-lucide="credit-card" style="width:14px;height:14px"></i> Create account &amp; continue</button>
       <div class="auth-divider">Have an account? <span class="auth-link" onclick="showScreen('s-login')">Sign in</span></div>
     </div>
   </div>
@@ -1425,9 +1433,22 @@ That's the problem OIA solves. Comment "SYSTEMS" if you want the diagnostic we u
 
 <script>
 // ── MAIN SCRIPT ── All functions redefined here override the stubs in <head>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
   lucide.createIcons();
   checkMobile();
+
+  // Check for existing Supabase session — auto-login returning users
+  try {
+    const { data: { session } } = await window.__sb.auth.getSession();
+    if(session && session.user){
+      window.__currentUserId = session.user.id;
+      window.__currentUserEmail = session.user.email;
+      const isAdmin = session.user.email === 'info@asamoahgroup.com';
+      goAppDirect(isAdmin, session.user.email);
+      return;
+    }
+  } catch(e){ console.log('Session check:', e); }
+
   // Process any queued calls from stubs
   if(window.__pendingScreen) showScreen(window.__pendingScreen);
   if(window.__pendingBilling) setBilling(window.__pendingBilling);
@@ -1512,7 +1533,7 @@ function showScreen(id){
   }
   lucide.createIcons();
 }
-function doLogin(){
+async function doLogin(){
   const em=document.getElementById('li-em').value.trim().toLowerCase();
   const pw=document.getElementById('li-pw').value.trim();
   const errEl=document.getElementById('login-error');
@@ -1526,47 +1547,39 @@ function doLogin(){
   btn.innerHTML='<div style="width:13px;height:13px;border:1.5px solid rgba(0,0,0,0.3);border-top-color:#000;border-radius:50%;animation:spin 0.8s linear infinite"></div> Signing in\u2026';
   btn.disabled=true;
 
-  // Try real Supabase auth first
-  fetch('/api/auth',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'login',email:em,password:pw})
-  })
-  .then(r=>r.json())
-  .then(data=>{
-    btn.innerHTML='<i data-lucide="arrow-right" style="width:14px;height:14px"></i> Sign in';
-    btn.disabled=false;
-    lucide.createIcons();
+  try {
+    const { data, error } = await window.__sb.auth.signInWithPassword({ email: em, password: pw });
 
-    if(data.error){
-      // If API not available, fall back to demo mode
-      if(em==='info@asamoahgroup.com'&&pw==='KWADWO1717'){
-        window.__currentUserId='admin';
-        window.__currentUserEmail=em;
-        goAppDirect(true,em);
+    if(error){
+      btn.innerHTML='<i data-lucide="arrow-right" style="width:14px;height:14px"></i> Sign in';
+      btn.disabled=false;
+      lucide.createIcons();
+      if(error.message.includes('Invalid login')||error.message.includes('invalid')){
+        errEl.textContent='Incorrect email or password. Please check your credentials.';
+      } else if(error.message.includes('Email not confirmed')){
+        errEl.textContent='Please check your email and confirm your account first.';
       } else {
-        errEl.textContent='Incorrect email or password. Please try again.';
-        errEl.style.display='block';
+        errEl.textContent=error.message;
       }
+      errEl.style.display='block';
       return;
     }
 
-    window.__currentUserId=data.user?.id||'';
+    // Successful login
+    window.__currentUserId=data.user.id;
     window.__currentUserEmail=em;
-    const isAdmin=data.role==='admin'||(em==='info@asamoahgroup.com'&&pw==='KWADWO1717');
-    goAppDirect(isAdmin,em);
-  })
-  .catch(()=>{
-    // API not available — demo fallback
+
+    // Check if admin
+    const isAdmin=(em==='info@asamoahgroup.com');
+    goAppDirect(isAdmin, em);
+
+  } catch(err){
     btn.innerHTML='<i data-lucide="arrow-right" style="width:14px;height:14px"></i> Sign in';
     btn.disabled=false;
     lucide.createIcons();
-    const isAdmin=(em==='info@asamoahgroup.com'&&pw==='KWADWO1717');
-    if(!isAdmin&&pw.length<6){errEl.textContent='Password must be at least 6 characters.';errEl.style.display='block';return;}
-    window.__currentUserId='demo';
-    window.__currentUserEmail=em;
-    goAppDirect(isAdmin,em);
-  });
+    errEl.textContent='Connection error. Please check your internet and try again.';
+    errEl.style.display='block';
+  }
 }
 
 function goAppDirect(isAdmin, email=''){
@@ -1607,15 +1620,76 @@ function goConfirm(){
   btn.disabled=true;
   setTimeout(()=>{showScreen('s-confirm');lucide.createIcons();},1800);
 }
-function goApp(){goAppDirect(false,'demo@aletheiahq.com');}
-function signOut(){
+function goApp(){goAppDirect(false,'');}
+
+async function doRegister(){
+  const name=document.getElementById('reg-name').value.trim();
+  const em=document.getElementById('reg-em').value.trim().toLowerCase();
+  const pw=document.getElementById('reg-pw').value.trim();
+  const org=document.getElementById('reg-org').value.trim();
+  const errEl=document.getElementById('register-error');
+  const sucEl=document.getElementById('register-success');
+  const btn=document.getElementById('reg-btn');
+
+  errEl.style.display='none'; sucEl.style.display='none';
+
+  if(!name){errEl.textContent='Please enter your full name.';errEl.style.display='block';return;}
+  if(!em){errEl.textContent='Please enter your email.';errEl.style.display='block';return;}
+  if(!pw||pw.length<8){errEl.textContent='Password must be at least 8 characters.';errEl.style.display='block';return;}
+
+  btn.innerHTML='<div style="width:13px;height:13px;border:1.5px solid rgba(0,0,0,0.3);border-top-color:#000;border-radius:50%;animation:spin 0.8s linear infinite"></div> Creating account\u2026';
+  btn.disabled=true;
+
+  try {
+    const { data, error } = await window.__sb.auth.signUp({
+      email: em,
+      password: pw,
+      options: { data: { full_name: name, organisation: org } }
+    });
+
+    if(error){
+      btn.innerHTML='<i data-lucide="credit-card" style="width:14px;height:14px"></i> Create account & continue';
+      btn.disabled=false;
+      lucide.createIcons();
+      errEl.textContent=error.message;
+      errEl.style.display='block';
+      return;
+    }
+
+    btn.innerHTML='<i data-lucide="credit-card" style="width:14px;height:14px"></i> Create account & continue';
+    btn.disabled=false;
+    lucide.createIcons();
+
+    if(data.user && !data.session){
+      // Email confirmation required
+      sucEl.textContent='Account created! Please check your email to confirm your account, then sign in.';
+      sucEl.style.display='block';
+    } else if(data.session){
+      // Auto-confirmed — go to payment
+      window.__currentUserId=data.user.id;
+      window.__currentUserEmail=em;
+      showScreen('s-payment');
+    }
+
+  } catch(err){
+    btn.innerHTML='<i data-lucide="credit-card" style="width:14px;height:14px"></i> Create account & continue';
+    btn.disabled=false;
+    lucide.createIcons();
+    errEl.textContent='Connection error. Please try again.';
+    errEl.style.display='block';
+  }
+}
+
+async function signOut(){
+  try { await window.__sb.auth.signOut(); } catch{}
   document.getElementById('s-app').classList.remove('show');
-  // Reset admin UI
   document.getElementById('admin-section').style.display='none';
   document.getElementById('nav-quotestudio').style.display='none';
   document.getElementById('nav-agent').style.display='none';
   document.getElementById('admin-crown').style.display='none';
   document.getElementById('admin-creds').style.display='none';
+  window.__currentUserId='';
+  window.__currentUserEmail='';
   showScreen('s-landing');
 }
 
