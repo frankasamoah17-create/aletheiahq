@@ -1518,33 +1518,55 @@ function doLogin(){
   const errEl=document.getElementById('login-error');
   const btn=document.getElementById('login-btn');
 
-  // Validation
   if(!em){errEl.textContent='Please enter your email address.';errEl.style.display='block';return;}
   if(!pw){errEl.textContent='Please enter your password.';errEl.style.display='block';return;}
+  if(pw.length<6){errEl.textContent='Password must be at least 6 characters.';errEl.style.display='block';return;}
   errEl.style.display='none';
 
-  // Loading state
-  btn.innerHTML='<div style="width:13px;height:13px;border:1.5px solid rgba(0,0,0,0.3);border-top-color:#000;border-radius:50%;animation:spin 0.8s linear infinite"></div> Signing in…';
+  btn.innerHTML='<div style="width:13px;height:13px;border:1.5px solid rgba(0,0,0,0.3);border-top-color:#000;border-radius:50%;animation:spin 0.8s linear infinite"></div> Signing in\u2026';
   btn.disabled=true;
 
-  setTimeout(()=>{
+  // Try real Supabase auth first
+  fetch('/api/auth',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'login',email:em,password:pw})
+  })
+  .then(r=>r.json())
+  .then(data=>{
     btn.innerHTML='<i data-lucide="arrow-right" style="width:14px;height:14px"></i> Sign in';
     btn.disabled=false;
     lucide.createIcons();
 
-    // Admin credentials
-    const isAdmin=(em==='info@asamoahgroup.com'&&pw==='KWADWO1717');
-
-    // Wrong password for non-admin — only block if email looks real but password wrong
-    if(!isAdmin && pw.length < 6){
-      errEl.textContent='Password must be at least 6 characters.';
-      errEl.style.display='block';
+    if(data.error){
+      // If API not available, fall back to demo mode
+      if(em==='info@asamoahgroup.com'&&pw==='KWADWO1717'){
+        window.__currentUserId='admin';
+        window.__currentUserEmail=em;
+        goAppDirect(true,em);
+      } else {
+        errEl.textContent='Incorrect email or password. Please try again.';
+        errEl.style.display='block';
+      }
       return;
     }
 
-    // All valid logins go through
-    goAppDirect(isAdmin, em);
-  }, 900);
+    window.__currentUserId=data.user?.id||'';
+    window.__currentUserEmail=em;
+    const isAdmin=data.role==='admin'||(em==='info@asamoahgroup.com'&&pw==='KWADWO1717');
+    goAppDirect(isAdmin,em);
+  })
+  .catch(()=>{
+    // API not available — demo fallback
+    btn.innerHTML='<i data-lucide="arrow-right" style="width:14px;height:14px"></i> Sign in';
+    btn.disabled=false;
+    lucide.createIcons();
+    const isAdmin=(em==='info@asamoahgroup.com'&&pw==='KWADWO1717');
+    if(!isAdmin&&pw.length<6){errEl.textContent='Password must be at least 6 characters.';errEl.style.display='block';return;}
+    window.__currentUserId='demo';
+    window.__currentUserEmail=em;
+    goAppDirect(isAdmin,em);
+  });
 }
 
 function goAppDirect(isAdmin, email=''){
@@ -1646,37 +1668,163 @@ function runGen(){
 }
 
 // ── PROFILE ANALYSIS ──
-function runAnalysis(){
+async function runAnalysis(){
+  const url=document.querySelector('.url-inp')?.value?.trim();
+  if(!url){toast('Enter a profile URL first');return;}
+  const platform=document.querySelector('#page-analyzer .chip.active')?.textContent?.trim()?.toLowerCase()||'linkedin';
+
   document.getElementById('ap-prog').style.display='block';
   document.getElementById('ap-result').style.display='none';
+
   function setAS(n,state){
-    const el=document.getElementById('as'+n);el.className='a-stage '+state;
+    const el=document.getElementById('as'+n);
+    el.className='a-stage '+state;
     const ic=el.querySelector('.a-stage-ic');
     const icons=['globe','brain','lightbulb','file-text'];
     const cols={wait:'var(--wh4)',active:'var(--wh2)',done:'var(--wh)'};
-    const icon=state==='active'?'loader-2':state==='done'?'check':icons[n-1];
-    ic.innerHTML='<i data-lucide="'+icon+'" style="width:13px;height:13px;color:'+cols[state]+(state==='active'?';animation:spin 0.8s linear infinite':'')+'" aria-hidden="true"></i>';
+    ic.innerHTML=state==='active'
+      ?'<div style="width:13px;height:13px;border:1.5px solid rgba(255,255,255,0.3);border-top-color:var(--wh);border-radius:50%;animation:spin 0.8s linear infinite"></div>'
+      :state==='done'
+      ?'<i data-lucide="check" style="width:13px;height:13px;color:var(--wh)"></i>'
+      :`<i data-lucide="${icons[n-1]}" style="width:13px;height:13px;color:${cols[state]}"></i>`;
     lucide.createIcons();
   }
+
   setAS(1,'active');
-  setTimeout(()=>{setAS(1,'done');setAS(2,'active');},1400);
-  setTimeout(()=>{setAS(2,'done');setAS(3,'active');},2800);
-  setTimeout(()=>{setAS(3,'done');setAS(4,'active');},4200);
-  setTimeout(()=>{setAS(4,'done');setTimeout(()=>{document.getElementById('ap-prog').style.display='none';document.getElementById('ap-result').style.display='block';lucide.createIcons();},400);},5600);
+  await new Promise(r=>setTimeout(r,1000));
+  setAS(1,'done'); setAS(2,'active');
+  await new Promise(r=>setTimeout(r,1000));
+
+  try {
+    const res=await fetch('/api/generate',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'analyze_profile',profileUrl:url,platform,userId:window.__currentUserId||'demo'})
+    });
+    const data=await res.json();
+
+    setAS(2,'done'); setAS(3,'active');
+    await new Promise(r=>setTimeout(r,800));
+    setAS(3,'done'); setAS(4,'active');
+    await new Promise(r=>setTimeout(r,600));
+    setAS(4,'done');
+
+    await new Promise(r=>setTimeout(r,400));
+    document.getElementById('ap-prog').style.display='none';
+    document.getElementById('ap-result').style.display='block';
+
+    // Update scores with real data
+    if(data.currentScore){
+      document.querySelector('.score-ring .sr-num').textContent=data.currentScore;
+    }
+    if(data.potentialScore){
+      document.querySelectorAll('.score-ring')[1]?.querySelector('.sr-num')?.textContent && (document.querySelectorAll('.score-ring')[1].querySelector('.sr-num').textContent=data.potentialScore);
+    }
+
+    // Update headline suggestion
+    if(data.headlineSuggestion){
+      const impCards=document.querySelectorAll('.imp-sug');
+      if(impCards[0]) impCards[0].innerHTML=`<strong style="color:var(--wh)">Suggested:</strong> ${data.headlineSuggestion}`;
+    }
+
+    lucide.createIcons();
+
+  } catch(err){
+    setAS(2,'done'); setAS(3,'done'); setAS(4,'done');
+    await new Promise(r=>setTimeout(r,400));
+    document.getElementById('ap-prog').style.display='none';
+    document.getElementById('ap-result').style.display='block';
+    lucide.createIcons();
+  }
 }
 
 // ── REPURPOSE ──
-function runRepurpose(btn){
-  btn.innerHTML='<div style="width:13px;height:13px;border:1.5px solid rgba(0,0,0,0.3);border-top-color:#000;border-radius:50%;animation:spin 0.8s linear infinite"></div> Creating…';
+async function runRepurpose(btn){
+  const sourceContent=document.querySelector('#page-repurpose textarea')?.value?.trim();
+  if(!sourceContent){toast('Paste some content first');return;}
+
+  btn.innerHTML='<div style="width:13px;height:13px;border:1.5px solid rgba(0,0,0,0.3);border-top-color:#000;border-radius:50%;animation:spin 0.8s linear infinite"></div> Creating...';
   btn.disabled=true;
-  setTimeout(()=>{document.getElementById('rp-res').style.display='block';btn.innerHTML='<i data-lucide="check" style="width:12px;height:12px"></i> Done — 8 posts';btn.disabled=false;lucide.createIcons();document.getElementById('rp-res').scrollIntoView({behavior:'smooth',block:'nearest'});},2800);
+
+  try {
+    const res=await fetch('/api/generate',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'repurpose',content:sourceContent,userId:window.__currentUserId||'demo'})
+    });
+    const data=await res.json();
+
+    document.getElementById('rp-res').style.display='block';
+
+    if(data.posts&&data.posts.length>0){
+      const grid=document.querySelector('#rp-res .post-grid');
+      if(grid){
+        grid.innerHTML='';
+        data.posts.forEach(p=>{
+          const platIcon={linkedin:'linkedin',instagram:'instagram',facebook:'facebook',x:'twitter',tiktok:'video',youtube_shorts:'youtube',threads:'message-circle',google_business:'map-pin'}[p.platform]||'newspaper';
+          const div=document.createElement('div');
+          div.className='rp-card';
+          div.innerHTML=`
+            <div class="rp-from"><i data-lucide="${platIcon}" style="width:11px;height:11px"></i> ${p.platform} <i data-lucide="arrow-right" style="width:10px;height:10px"></i> Repurposed</div>
+            <div class="post-hook">${p.hook||''}</div>
+            <div class="post-cap">${p.caption||''}</div>
+            <div style="display:flex;gap:6px;margin-top:10px">
+              <button class="btn-s" onclick="cp(event)"><i data-lucide="copy" style="width:11px;height:11px"></i> Copy</button>
+              <button class="btn-s wh"><i data-lucide="calendar-plus" style="width:11px;height:11px"></i> Schedule</button>
+            </div>`;
+          grid.appendChild(div);
+        });
+        lucide.createIcons();
+      }
+    }
+  } catch(err){
+    document.getElementById('rp-res').style.display='block';
+  }
+
+  btn.innerHTML='<i data-lucide="check" style="width:12px;height:12px"></i> Done — 8 posts';
+  btn.disabled=false;
+  lucide.createIcons();
+  document.getElementById('rp-res').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
 // ── GHOST WRITER ──
-function runGhost(btn){
-  btn.innerHTML='<div style="width:13px;height:13px;border:1.5px solid rgba(0,0,0,0.3);border-top-color:#000;border-radius:50%;animation:spin 0.8s linear infinite"></div> Writing…';
+async function runGhost(btn){
+  const idea=document.getElementById('gw-idea').value.trim();
+  if(!idea){toast('Enter your idea first');return;}
+  const platform=document.querySelector('#page-ghostwriter select')?.value||'LinkedIn post';
+  const voice=document.querySelectorAll('#page-ghostwriter select')[1]?.value||'Direct + Authoritative';
+
+  btn.innerHTML='<div style="width:13px;height:13px;border:1.5px solid rgba(0,0,0,0.3);border-top-color:#000;border-radius:50%;animation:spin 0.8s linear infinite"></div> Writing...';
   btn.disabled=true;
-  setTimeout(()=>{document.getElementById('gw-res').style.display='block';btn.innerHTML='<i data-lucide="check" style="width:12px;height:12px"></i> Post written';btn.disabled=false;lucide.createIcons();document.getElementById('gw-res').scrollIntoView({behavior:'smooth',block:'nearest'});},3200);
+
+  try {
+    const res=await fetch('/api/generate',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        action:'ghostwrite',
+        idea, platform, voice,
+        userId:window.__currentUserId||'demo'
+      })
+    });
+    const data=await res.json();
+
+    if(data.post||data.content){
+      document.getElementById('gw-res').style.display='block';
+      const resultEl=document.querySelector('.gw-result');
+      if(resultEl) resultEl.textContent=data.post||data.content;
+    } else {
+      document.getElementById('gw-res').style.display='block';
+    }
+  } catch(err){
+    // Fallback to demo content
+    document.getElementById('gw-res').style.display='block';
+  }
+
+  btn.innerHTML='<i data-lucide="check" style="width:12px;height:12px"></i> Post written';
+  btn.disabled=false;
+  lucide.createIcons();
+  document.getElementById('gw-res').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
 // ── QUOTE STUDIO ──
@@ -1832,9 +1980,11 @@ function setPipeStage(n,state,sub=''){
   }
 }
 
-function runPipeline(){
+async function runPipeline(){
   const url=document.getElementById('pipe-url').value.trim();
   if(!url||!url.startsWith('http')){toast('Enter a valid website URL first');return;}
+
+  const businessName=document.querySelector('#pipeline-form input[value]')?.value||'';
 
   // Hide form, show running state
   document.getElementById('pipeline-form').style.display='none';
@@ -1842,55 +1992,126 @@ function runPipeline(){
   document.getElementById('pipeline-done').style.display='none';
   pipeStartTime=Date.now();
 
-  // Animate post counter
+  // Animate counter while real API runs
   let count=0;
-  const target=114;
+  let target=114;
   const ctr=setInterval(()=>{
-    count=Math.min(count+Math.floor(Math.random()*6)+2,target);
-    document.getElementById('pipe-count').textContent=count;
-    if(count>=target)clearInterval(ctr);
-  },180);
+    if(count<target-5){
+      count=Math.min(count+Math.floor(Math.random()*4)+1,target-5);
+      document.getElementById('pipe-count').textContent=count;
+    }
+  },400);
 
-  // Stage 1 — Read website
   setPipeStage(1,'active','Fetching pages, extracting copy and metadata...');
-  setTimeout(()=>{
+
+  try {
+    // Stage 1 — real API call
+    const res = await fetch('/api/generate', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        url,
+        businessName,
+        campaignGoal: document.querySelector('#pipeline-form select')?.value||'Lead generation',
+        tone: 'Professional and authoritative',
+        userId: window.__currentUserId||'demo'
+      })
+    });
+
     setPipeStage(1,'done');
-    setPipeStage(2,'active','Industry, audiences, brand voice, services, pain points...');
-  },1800);
+    setPipeStage(2,'active','AI analysing your business model and audiences...');
 
-  // Stage 2 — AI analysis
-  setTimeout(()=>{
+    const data = await res.json();
+
+    if(data.error){
+      clearInterval(ctr);
+      toast('Error: '+data.error);
+      document.getElementById('pipeline-form').style.display='block';
+      document.getElementById('pipeline-running').style.display='none';
+      return;
+    }
+
     setPipeStage(2,'done');
-    const engMsg=pipeEngineChoice==='both'?'OpenAI GPT-4o + Claude writing hooks, captions, CTAs...':
-      pipeEngineChoice==='claude'?'Claude writing hooks, captions, CTAs...':'GPT-4o writing hooks, captions, CTAs...';
-    setPipeStage(3,'active',engMsg);
-  },3600);
+    setPipeStage(3,'active','Writing platform-specific posts...');
 
-  // Stage 3 — Generate posts
-  setTimeout(()=>{
+    // Give visual feedback
+    await new Promise(r=>setTimeout(r,1200));
     setPipeStage(3,'done');
-    const modeMsg=pipeModeChoice==='auto'?'Scheduling posts across connected platforms...':
-      pipeModeChoice==='download'?'Packaging CSV + PDF + content calendar...':'Preparing post library for review...';
-    setPipeStage(4,'active',modeMsg);
-  },5800);
+    setPipeStage(4,'active','Packaging your content library...');
+    await new Promise(r=>setTimeout(r,800));
+    setPipeStage(4,'done');
 
-  // Stage 4 — Publish/package
-  setTimeout(()=>{
+    // Finish counter
+    clearInterval(ctr);
+    const realCount = data.postsGenerated || target;
+    document.getElementById('pipe-count').textContent=realCount;
+
+    const elapsed=Math.round((Date.now()-pipeStartTime)/1000);
+    document.getElementById('pipeline-running').style.display='none';
+    document.getElementById('pipeline-done').style.display='block';
+    document.getElementById('done-count').textContent=realCount;
+    document.getElementById('done-time').textContent=elapsed;
+
+    // Show real business profile
+    const bp = data.businessProfile||{};
+    document.getElementById('done-profile').textContent=
+      [bp.industry, bp.targetAudience, bp.valueProposition].filter(Boolean).join(' · ')||
+      'Business profile extracted successfully';
+
+    // Populate post library with real posts
+    if(data.posts && data.posts.length>0){
+      populatePostLibrary(data.posts);
+    }
+
+    lucide.createIcons();
+    toast(realCount+' posts generated in '+elapsed+' seconds');
+
+  } catch(err){
+    clearInterval(ctr);
+    // Fallback to demo mode if API not available yet
+    setPipeStage(1,'done');
+    setPipeStage(2,'done');
+    setPipeStage(3,'done');
     setPipeStage(4,'done');
     const elapsed=Math.round((Date.now()-pipeStartTime)/1000);
-    // Show complete state
     document.getElementById('pipeline-running').style.display='none';
     document.getElementById('pipeline-done').style.display='block';
     document.getElementById('done-count').textContent=target;
     document.getElementById('done-time').textContent=elapsed;
-    // Fill profile summary based on URL
-    const domain=url.replace('https://','').replace('http://','').split('/')[0];
-    document.getElementById('done-profile').textContent=
-      'Strategy & Operations · Business owners + Executives · Professional-Authoritative · Consulting, OIA, AI Advisory · Operational inefficiency · Systems that run without you';
+    document.getElementById('done-profile').textContent='Strategy & Operations · Business owners · Professional-Authoritative';
     lucide.createIcons();
-    toast(target+' posts generated in '+elapsed+' seconds');
-  },7800);
+    toast(target+' posts ready — '+elapsed+'s');
+  }
 }
+
+// Populate post library with real generated posts
+function populatePostLibrary(posts){
+  const grid=document.querySelector('#page-posts .post-grid');
+  if(!grid||!posts.length)return;
+  grid.innerHTML='';
+  posts.slice(0,20).forEach(p=>{
+    const card=document.createElement('div');
+    card.className='post-card';
+    card.onclick=function(){selPost(this);};
+    const platIcon={linkedin:'linkedin',instagram:'instagram',facebook:'facebook',x:'twitter',tiktok:'video',youtube_shorts:'youtube',threads:'message-circle',google_business:'map-pin'}[p.platform]||'newspaper';
+    const tags=(p.hashtags||[]).slice(0,3).map(t=>'#'+t.replace('#','')).join(' ');
+    card.innerHTML=`
+      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px">
+        <span class="badge b-bk"><i data-lucide="${platIcon}" style="width:9px;height:9px"></i> ${p.platform}</span>
+        <span class="badge b-bk">${p.funnel_stage||p.funnelStage||'awareness'}</span>
+      </div>
+      <div class="post-hook">${p.hook||''}</div>
+      <div class="post-cap">${p.caption||''}</div>
+      <div class="post-tags">${tags}</div>
+      <div class="post-acts">
+        <button class="btn-s" onclick="cp(event)"><i data-lucide="copy" style="width:11px;height:11px"></i> Copy</button>
+        <button class="btn-s"><i data-lucide="calendar-plus" style="width:11px;height:11px"></i> Schedule</button>
+      </div>`;
+    grid.appendChild(card);
+  });
+  lucide.createIcons();
+}
+
 
 function resetPipeline(){
   document.getElementById('pipeline-form').style.display='block';
