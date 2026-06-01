@@ -330,6 +330,23 @@ html,body{height:100%;background:var(--bk);color:var(--wh);font-family:'DM Sans'
   .land-stats{gap:20px}
 }
 </style>
+<!-- Function stubs — prevent onclick errors before main script loads -->
+<script>
+function showScreen(id){
+  // Will be redefined by main script — queue the call
+  window.__pendingScreen=id;
+}
+function setBilling(type){window.__pendingBilling=type;}
+function selPlan(k){window.__pendingPlan=k;}
+function showPage(id,el){window.__pendingPage={id,el};}
+function doLogin(){window.__pendingAction='login';}
+function goApp(){window.__pendingAction='goApp';}
+function signOut(){window.__pendingAction='signOut';}
+function toast(msg){
+  // Simple fallback toast before main script
+  console.log('Toast:',msg);
+}
+</script>
 </head>
 <body>
 
@@ -1407,9 +1424,18 @@ That's the problem OIA solves. Comment "SYSTEMS" if you want the diagnostic we u
 <div class="toast" id="toast-el"><i data-lucide="check" style="width:13px;height:13px;flex-shrink:0"></i><span id="toast-msg"></span></div>
 
 <script>
-// Make all functions global immediately so onclick handlers work
+// ── MAIN SCRIPT ── All functions redefined here override the stubs in <head>
 document.addEventListener('DOMContentLoaded', function() {
   lucide.createIcons();
+  checkMobile();
+  // Process any queued calls from stubs
+  if(window.__pendingScreen) showScreen(window.__pendingScreen);
+  if(window.__pendingBilling) setBilling(window.__pendingBilling);
+  if(window.__pendingPlan) selPlan(window.__pendingPlan);
+  if(window.__pendingPage) showPage(window.__pendingPage.id, window.__pendingPage.el);
+  if(window.__pendingAction === 'login') doLogin();
+  if(window.__pendingAction === 'goApp') goApp();
+  if(window.__pendingAction === 'signOut') signOut();
 });
 
 // ── BILLING TOGGLE & PLAN SELECTION ──
@@ -1717,7 +1743,7 @@ const agentResponses={
   'Generate 5 new quotes on discipline in my voice':'Here are 5 discipline quotes in your voice:\n\n1. "Life doesn\'t test intentions — it tests discipline."\n\n2. "Discipline is the gap between where you are and where you said you\'d be."\n\n3. "Every undone habit is a debt you\'ll repay with interest."\n\n4. "The disciplined man doesn\'t need motivation — he has structure."\n\n5. "Discipline is choosing the version of yourself you promised to build."\n\nAll 5 have been added to your Quote Studio queue. Format preference: black background, Cormorant Garamond, your handle.',
   'Write a LinkedIn post about CareBridge OS':'LinkedIn Post — CareBridge OS\n\nMost healthcare platforms are built for administrators, not patients.\n\nCareBridge OS was built the other way around.\n\nWe designed an operating system for care delivery that reduces the friction between families, providers, and coordinators — so the people who need support actually get it, instead of getting lost in handoffs.\n\nWhat we built isn\'t just software. It\'s operational architecture for human services.\n\nIf you\'re in care coordination, case management, or healthcare operations and you\'re tired of systems that add more work than they remove — DM me. I\'ll show you what we built.\n\n@carebridgeos.care\n\n#HealthcareTech #HumanServices #CareCoordination #HealthcareInnovation',
   'Create a content plan for NorthBridge Concierge this week':'NorthBridge Concierge — This Week\'s Content Plan:\n\nMonday (LinkedIn): "Luxury is not a product — it is the experience of not having to think about logistics." — Authority post establishing NorthBridge positioning.\n\nTuesday (Instagram): Behind-the-scenes of what a concierge day looks like — story-format post.\n\nWednesday (X): Thread on "Why Boston\'s high-net-worth professionals are turning to concierge services in 2026"\n\nThursday (Facebook): Testimonial-style post + lead hook: "What does a typical NorthBridge client look like? DM CONCIERGE."\n\nFriday (LinkedIn): Conversion post: "NorthBridge Concierge now accepting Q4 clients. 3 spots remaining. Link in bio."\n\nAll posts scheduled in your calendar. Black and white graphics queued in Quote Studio.',
-  'Generate a follow-up message for Sample Lead A':'LinkedIn DM — Sample Lead A Follow-up:\n\nSubject: Quick thought on what we discussed\n\n"Alex — I've been thinking about the operational gap you described. It\'s the same pattern I\'ve seen in three of our most successful turnarounds. The bottleneck was never the vision. It was the infrastructure.\n\nI put together a one-page diagnostic that maps exactly where that gap sits for companies at your stage. Takes 5 minutes to complete. No pitch — just clarity.\n\nWould it be worth 15 minutes this week to walk through it together?\n\n— Frank"\n\nSend time recommendation: Tuesday between 8–9am. Engagement score at 88% — this is a high-conversion window.'
+  'Generate a follow-up message for Sample Lead A':'LinkedIn DM — Sample Lead A Follow-up:\n\nSubject: Quick thought on what we discussed\n\n"Alex — I\'ve been thinking about the operational gap you described. It\'s the same pattern I\'ve seen in three of our most successful turnarounds. The bottleneck was never the vision. It was the infrastructure.\n\nI put together a one-page diagnostic that maps exactly where that gap sits for companies at your stage. Takes 5 minutes to complete. No pitch — just clarity.\n\nWould it be worth 15 minutes this week to walk through it together?\n\n— Frank"\n\nSend time recommendation: Tuesday between 8–9am. Engagement score at 88% — this is a high-conversion window.'
 };
 function runAgent(){
   const cmd=document.getElementById('agent-cmd').value.trim();
