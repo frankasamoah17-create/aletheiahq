@@ -1407,7 +1407,10 @@ That's the problem OIA solves. Comment "SYSTEMS" if you want the diagnostic we u
 <div class="toast" id="toast-el"><i data-lucide="check" style="width:13px;height:13px;flex-shrink:0"></i><span id="toast-msg"></span></div>
 
 <script>
-lucide.createIcons();
+// Make all functions global immediately so onclick handlers work
+document.addEventListener('DOMContentLoaded', function() {
+  lucide.createIcons();
+});
 
 // ── BILLING TOGGLE & PLAN SELECTION ──
 let sPlanKey='growth';
@@ -1895,6 +1898,6 @@ function connectPlatform(plat,btn){
     toast(plat.charAt(0).toUpperCase()+plat.slice(1)+' connected — posts will auto-publish on schedule');
   },1600);
 }
-
+</script>
 </body>
 </html>
