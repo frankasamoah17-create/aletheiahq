@@ -216,7 +216,6 @@ Return ONLY the JSON array.`
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
-}
 
 
   // ── GENERATE 100+ POSTS FROM URL ──
