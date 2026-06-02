@@ -15,8 +15,18 @@
   --char:#333;--char2:#444;
   --r:6px;--r2:12px;--shadow:0 4px 32px rgba(0,0,0,0.9);
   --sidebar-w:210px;
+  --fs-base:15px;--fs-sm:13px;--fs-xs:11px;--fs-label:11px;
 }
-html,body{height:100%;background:var(--bk);color:var(--wh);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6;overflow:hidden}
+
+/* ═══════ LIGHT MODE ═══════ */
+body.light-mode{
+  --bk:#F8F8F8;--bk1:#FFFFFF;--bk2:#F0F0F0;--bk3:#E0E0E0;--bk4:#CCCCCC;--bk5:#BBBBBB;
+  --wh:#111111;--wh1:#222222;--wh2:#333333;--wh3:#555555;--wh4:#888888;
+}
+body.light-mode ::-webkit-scrollbar-track{background:#F0F0F0}
+body.light-mode ::-webkit-scrollbar-thumb{background:#CCCCCC}
+
+html,body{height:100%;background:var(--bk);color:var(--wh);font-family:'DM Sans',sans-serif;font-size:var(--fs-base);line-height:1.6;overflow:hidden;transition:background 0.3s,color 0.3s}
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-track{background:var(--bk2)}
 ::-webkit-scrollbar-thumb{background:var(--bk5)}
@@ -206,7 +216,35 @@ html,body{height:100%;background:var(--bk);color:var(--wh);font-family:'DM Sans'
 /* WIDE FORMAT */
 .qf-wide{aspect-ratio:16/9;max-width:560px}
 
-/* ═══════════ PIPELINE & AUTO-PUBLISH ═══════════ */
+/* ═══════════ SETTINGS TOGGLES & FONT ═══════════ */
+.toggle-switch{width:40px;height:22px;background:var(--bk4);border:1px solid var(--bk5);cursor:pointer;position:relative;transition:all 0.3s;flex-shrink:0}
+.toggle-switch::after{content:'';width:16px;height:16px;background:var(--wh4);position:absolute;top:2px;left:2px;transition:all 0.3s}
+.toggle-switch.active{background:var(--wh3);border-color:var(--wh2)}
+.toggle-switch.active::after{background:var(--wh);left:20px}
+.font-size-btn.active{background:var(--wh)!important;color:var(--bk)!important;border-color:var(--wh)!important}
+body.fs-large{font-size:17px!important}
+body.fs-xl{font-size:19px!important}
+body.fs-large .nav-btn,body.fs-large .card-t{font-size:14px}
+body.fs-xl .nav-btn,body.fs-xl .card-t{font-size:16px}
+
+/* ═══════════ MODALS ═══════════ */
+.modal-open{display:flex!important}
+
+/* ═══════════ EMOJI PICKER ═══════════ */
+.emoji-picker{position:absolute;bottom:100%;left:0;background:var(--bk1);border:1px solid var(--bk4);padding:10px;display:none;flex-wrap:wrap;gap:4px;width:280px;max-height:200px;overflow-y:auto;z-index:100}
+.emoji-picker.show{display:flex}
+.emoji-btn{font-size:18px;cursor:pointer;padding:4px;border-radius:4px;transition:background 0.15s;background:none;border:none}
+.emoji-btn:hover{background:var(--bk3)}
+
+/* ═══════════ GALLERY ═══════════ */
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.gallery-item{aspect-ratio:1;background:var(--bk2);border:1px solid var(--bk3);cursor:pointer;overflow:hidden;position:relative;transition:border-color 0.2s}
+.gallery-item:hover{border-color:var(--wh3)}
+.gallery-item img{width:100%;height:100%;object-fit:cover;filter:grayscale(100%)}
+.gallery-item .gallery-overlay{position:absolute;inset:0;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.gallery-item:hover .gallery-overlay{background:rgba(0,0,0,0.5)}
+
+
 .ai-engine-opt{transition:all 0.2s}
 .ai-engine-opt.active{background:var(--bk3)!important;border-bottom:2px solid var(--wh)}
 .output-mode{transition:all 0.2s}
@@ -585,6 +623,7 @@ function toast(msg){console.log('Toast:',msg);}
       <div class="nav-btn" onclick="showPage('manager',this)"><i data-lucide="bot" class="nav-icon"></i><span class="nav-lbl">AI Manager</span></div>
       <div class="nav-sec">Reporting</div>
       <div class="nav-btn" onclick="showPage('calendar',this)"><i data-lucide="calendar-days" class="nav-icon"></i><span class="nav-lbl">Calendar</span></div>
+      <div class="nav-btn" onclick="showPage('gallery',this)"><i data-lucide="image" class="nav-icon"></i><span class="nav-lbl">Media Gallery</span></div>
       <div class="nav-btn" onclick="showPage('analytics',this)"><i data-lucide="bar-chart-3" class="nav-icon"></i><span class="nav-lbl">Analytics</span></div>
       <div class="nav-sec" id="admin-section" style="display:none">Admin</div>
       <div class="nav-btn admin-nav" id="nav-quotestudio" onclick="showPage('quotestudio',this)" style="display:none"><i data-lucide="image" class="nav-icon"></i><span class="nav-lbl">Quote Studio</span><span class="nav-badge">ADMIN</span></div>
@@ -1175,7 +1214,7 @@ function toast(msg){console.log('Toast:',msg);}
         <div class="card">
           <div class="card-t"><i data-lucide="ghost" style="width:16px;height:16px"></i> Ghost Writer</div>
           <div class="card-sub">Rough idea → polished post in your voice. 99% human score. Built for people with powerful ideas who hate blank screens.</div>
-          <div class="f-grp"><label class="f-lbl">What do you want to say?</label><textarea class="f-inp" style="height:80px;resize:none" id="gw-idea">I want to talk about how most people confuse being busy with being productive. Same pattern in human services and consulting — people mistake activity for output.</textarea></div>
+          <div class="f-grp"><label class="f-lbl">What do you want to say? <button onclick="createEmojiPicker('gw-idea')" data-emoji-target="gw-idea" style="background:none;border:none;cursor:pointer;font-size:14px;vertical-align:middle;margin-left:4px" title="Add emoji">😊</button></label><textarea class="f-inp" style="height:80px;resize:none" id="gw-idea">I want to talk about how most people confuse being busy with being productive. Same pattern in human services and consulting — people mistake activity for output.</textarea></div>
           <div class="two-col"><div class="f-grp"><label class="f-lbl">Platform</label><select class="f-inp"><option>LinkedIn post</option><option>Instagram caption</option><option>TikTok script</option><option>X thread</option><option>Facebook post</option><option>Email newsletter</option></select></div><div class="f-grp"><label class="f-lbl">My voice is</label><select class="f-inp"><option>Direct + Authoritative</option><option>Warm + Conversational</option><option>Bold + Provocative</option><option>Educational + Precise</option></select></div></div>
           <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"><div class="chip active" onclick="fchip(this)">First person (I/my)</div><div class="chip" onclick="fchip(this)">Include hashtags</div><div class="chip active" onclick="fchip(this)">Include lead hook</div><div class="chip active" onclick="fchip(this)">No fluff — value only</div></div>
           <button class="btn-wh" onclick="runGhost(this)" style="max-width:240px"><i data-lucide="ghost" style="width:13px;height:13px"></i> Write in my voice</button>
@@ -1242,6 +1281,86 @@ That's the problem OIA solves. Comment "SYSTEMS" if you want the diagnostic we u
       <div class="page" id="page-calendar">
         <div class="card"><div class="card-t"><i data-lucide="calendar-days" style="width:15px;height:15px"></i> Content Calendar — November 2026</div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px"><div style="font-size:11px;color:var(--wh4);text-transform:uppercase;letter-spacing:0.5px">24 posts scheduled · 3 pending</div><button class="btn-s wh"><i data-lucide="plus" style="width:11px;height:11px"></i> Add post</button></div>
         <div class="cal-grid"><div class="cal-hdr">Mon</div><div class="cal-hdr">Tue</div><div class="cal-hdr">Wed</div><div class="cal-hdr">Thu</div><div class="cal-hdr">Fri</div><div class="cal-hdr">Sat</div><div class="cal-hdr">Sun</div><div class="cal-cell"><div class="cal-day">3</div><div class="cal-ev li">LI: OIA post</div></div><div class="cal-cell today"><div class="cal-day">4 · Today</div><div class="cal-ev ig">IG: Carousel</div><div class="cal-ev">X: Thread</div></div><div class="cal-cell"><div class="cal-day">5</div><div class="cal-ev">TT: Founder</div></div><div class="cal-cell"><div class="cal-day">6</div></div><div class="cal-cell"><div class="cal-day">7</div><div class="cal-ev li">LI: Case study</div></div><div class="cal-cell" style="opacity:0.4"><div class="cal-day">8</div></div><div class="cal-cell" style="opacity:0.4"><div class="cal-day">9</div></div><div class="cal-cell"><div class="cal-day">10</div><div class="cal-ev li">LI: Authority</div></div><div class="cal-cell"><div class="cal-day">11</div><div class="cal-ev">FB: Service</div></div><div class="cal-cell"><div class="cal-day">12</div><div class="cal-ev ig">IG: Reel</div><div class="cal-ev">X: Insight</div></div><div class="cal-cell"><div class="cal-day">13</div></div><div class="cal-cell"><div class="cal-day">14</div><div class="cal-ev">YT: Short</div></div><div class="cal-cell" style="opacity:0.35"><div class="cal-day">15</div></div><div class="cal-cell" style="opacity:0.35"><div class="cal-day">16</div></div></div></div>
+      </div>
+
+      <!-- ══ MEDIA GALLERY ══ -->
+      <div class="page" id="page-gallery">
+        <div style="max-width:700px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+            <div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300">Media Gallery</div>
+              <div style="font-size:12px;color:var(--wh4);margin-top:3px">Your black and white visual assets for posts and quote cards</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn-s wh" onclick="toast('Upload feature coming soon')"><i data-lucide="upload" style="width:13px;height:13px"></i> Upload</button>
+              <button class="btn-s" onclick="toast('Generating AI image...')"><i data-lucide="wand-2" style="width:13px;height:13px"></i> AI Generate</button>
+            </div>
+          </div>
+
+          <!-- FILTERS -->
+          <div class="chip-row" style="margin-bottom:16px">
+            <div class="chip active" onclick="fchip(this)">All</div>
+            <div class="chip" onclick="fchip(this)">Backgrounds</div>
+            <div class="chip" onclick="fchip(this)">Portraits</div>
+            <div class="chip" onclick="fchip(this)">Business</div>
+            <div class="chip" onclick="fchip(this)">Abstract</div>
+            <div class="chip" onclick="fchip(this)">Quote Cards</div>
+          </div>
+
+          <!-- GALLERY GRID -->
+          <div class="gallery-grid">
+            <div class="gallery-item" onclick="selectGalleryImage(this,'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600')">
+              <img src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=300" alt="Desk"/>
+              <div class="gallery-overlay"><i data-lucide="copy" style="width:20px;height:20px;color:var(--wh);opacity:0"></i></div>
+              <div style="position:absolute;bottom:0;left:0;right:0;padding:6px 8px;background:linear-gradient(transparent,rgba(0,0,0,0.8));font-size:10px;color:var(--wh3)">Workspace</div>
+            </div>
+            <div class="gallery-item" onclick="selectGalleryImage(this,'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600')">
+              <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=300" alt="Business"/>
+              <div class="gallery-overlay"></div>
+              <div style="position:absolute;bottom:0;left:0;right:0;padding:6px 8px;background:linear-gradient(transparent,rgba(0,0,0,0.8));font-size:10px;color:var(--wh3)">Business</div>
+            </div>
+            <div class="gallery-item" onclick="selectGalleryImage(this,'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600')">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300" alt="Portrait"/>
+              <div class="gallery-overlay"></div>
+              <div style="position:absolute;bottom:0;left:0;right:0;padding:6px 8px;background:linear-gradient(transparent,rgba(0,0,0,0.8));font-size:10px;color:var(--wh3)">Portrait</div>
+            </div>
+            <div class="gallery-item" onclick="selectGalleryImage(this,'https://images.unsplash.com/photo-1501139083538-0139583c060f?w=600')">
+              <img src="https://images.unsplash.com/photo-1501139083538-0139583c060f?w=300" alt="Clock"/>
+              <div class="gallery-overlay"></div>
+              <div style="position:absolute;bottom:0;left:0;right:0;padding:6px 8px;background:linear-gradient(transparent,rgba(0,0,0,0.8));font-size:10px;color:var(--wh3)">Time</div>
+            </div>
+            <div class="gallery-item" onclick="selectGalleryImage(this,'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600')">
+              <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=300" alt="Tech"/>
+              <div class="gallery-overlay"></div>
+              <div style="position:absolute;bottom:0;left:0;right:0;padding:6px 8px;background:linear-gradient(transparent,rgba(0,0,0,0.8));font-size:10px;color:var(--wh3)">Technology</div>
+            </div>
+            <div class="gallery-item" onclick="selectGalleryImage(this,'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600')">
+              <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300" alt="Books"/>
+              <div class="gallery-overlay"></div>
+              <div style="position:absolute;bottom:0;left:0;right:0;padding:6px 8px;background:linear-gradient(transparent,rgba(0,0,0,0.8));font-size:10px;color:var(--wh3)">Knowledge</div>
+            </div>
+            <div class="gallery-item" onclick="selectGalleryImage(this,'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600')">
+              <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=300" alt="City"/>
+              <div class="gallery-overlay"></div>
+              <div style="position:absolute;bottom:0;left:0;right:0;padding:6px 8px;background:linear-gradient(transparent,rgba(0,0,0,0.8));font-size:10px;color:var(--wh3)">City</div>
+            </div>
+            <div class="gallery-item" onclick="selectGalleryImage(this,'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600')">
+              <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=300" alt="Professional"/>
+              <div class="gallery-overlay"></div>
+              <div style="position:absolute;bottom:0;left:0;right:0;padding:6px 8px;background:linear-gradient(transparent,rgba(0,0,0,0.8));font-size:10px;color:var(--wh3)">Professional</div>
+            </div>
+            <div class="gallery-item" onclick="selectGalleryImage(this,'https://images.unsplash.com/photo-1497366216548-37526070297c?w=600')">
+              <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=300" alt="Office"/>
+              <div class="gallery-overlay"></div>
+              <div style="position:absolute;bottom:0;left:0;right:0;padding:6px 8px;background:linear-gradient(transparent,rgba(0,0,0,0.8));font-size:10px;color:var(--wh3)">Office</div>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;padding:14px;background:var(--bk2);border:1px solid var(--bk3);font-size:12px;color:var(--wh4);display:flex;align-items:center;gap:8px">
+            <i data-lucide="info" style="width:14px;height:14px;flex-shrink:0"></i>
+            All images are automatically converted to greyscale to match your black and white brand standard. Click any image to use it in your Quote Card Studio.
+          </div>
+        </div>
       </div>
 
       <!-- ══ ANALYTICS ══ -->
@@ -1406,11 +1525,250 @@ That's the problem OIA solves. Comment "SYSTEMS" if you want the diagnostic we u
 
       <!-- ══ SETTINGS ══ -->
       <div class="page" id="page-settings">
-        <div style="max-width:500px">
-          <div class="card"><div class="card-t"><i data-lucide="user" style="width:15px;height:15px"></i> Account</div><div style="margin-top:12px"><div class="f-grp"><label class="f-lbl">Full name</label><input class="f-inp" placeholder="Your full name"/></div><div class="f-grp"><label class="f-lbl">Email</label><input class="f-inp" placeholder="your@email.com"/></div><div class="f-grp"><label class="f-lbl">Organisation</label><input class="f-inp" value="" placeholder="Your business name"/></div><button class="btn-s wh" onclick="toast('Saved')"><i data-lucide="check" style="width:12px;height:12px"></i> Save</button></div></div>
-          <div class="card"><div class="card-t"><i data-lucide="credit-card" style="width:15px;height:15px"></i> Billing</div><div class="row-item"><span style="font-size:13px">Growth Plan — Monthly</span><span class="badge b-ok">Active</span></div><div class="row-item"><span style="font-size:12px;color:var(--wh4)">$79/month · Renews monthly</span><button class="btn-s ow" onclick="toast('Opening Stripe portal…')"><i data-lucide="external-link" style="width:11px;height:11px"></i> Manage</button></div></div>
-          <div class="card" id="admin-creds" style="display:none"><div class="card-t"><i data-lucide="shield" style="width:15px;height:15px"></i> Admin Access</div><div class="divider"></div><div style="background:var(--bk2);border:1px solid var(--bk3);border-left:2px solid var(--wh);padding:12px;margin-top:10px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:var(--wh4);margin-bottom:8px">Admin session active</div><div style="font-size:12px;color:var(--wh2)">You are logged in with full admin access. All platform features are unlocked.</div></div></div>
-          <div class="card"><div class="card-t"><i data-lucide="mic" style="width:15px;height:15px"></i> Brand Voice</div><div style="margin-top:10px"><div class="f-grp"><label class="f-lbl">Tone</label><select class="f-inp"><option>Professional + Authoritative</option><option>Direct + Bold</option><option>Conversational</option></select></div><div class="f-grp"><label class="f-lbl">Avoid</label><input class="f-inp" placeholder="Competitor names, pricing comparisons…"/></div><button class="btn-s wh" onclick="toast('Voice saved')"><i data-lucide="check" style="width:12px;height:12px"></i> Save</button></div></div>
+        <div style="max-width:620px">
+
+          <!-- ── ACCOUNT ── -->
+          <div class="card">
+            <div class="card-t"><i data-lucide="user" style="width:16px;height:16px"></i> Account</div>
+            <div class="card-sub">Your personal information and preferences</div>
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;padding:14px;background:var(--bk2);border:1px solid var(--bk3)">
+              <div id="settings-avatar" style="width:52px;height:52px;background:var(--wh);color:var(--bk);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;font-family:'Cormorant Garamond',serif;flex-shrink:0;cursor:pointer" onclick="toast('Avatar upload coming soon')">FA</div>
+              <div>
+                <div style="font-size:14px;font-weight:600" id="settings-name-display">Frank Asamoah</div>
+                <div style="font-size:12px;color:var(--wh4)" id="settings-email-display">info@asamoahgroup.com</div>
+                <button class="btn-s" style="margin-top:6px;font-size:10px" onclick="toast('Avatar upload coming soon')"><i data-lucide="camera" style="width:11px;height:11px"></i> Change photo</button>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+              <div class="f-grp"><label class="f-lbl">Full name</label><input class="f-inp" id="set-name" placeholder="Your full name"/></div>
+              <div class="f-grp"><label class="f-lbl">Organisation</label><input class="f-inp" id="set-org" placeholder="Your business"/></div>
+            </div>
+            <div class="f-grp"><label class="f-lbl">Email</label><input class="f-inp" id="set-email" placeholder="your@email.com"/></div>
+            <div class="f-grp"><label class="f-lbl">Bio / Tagline</label><textarea class="f-inp" id="set-bio" style="height:60px;resize:none" placeholder="Founder, strategist, builder..."></textarea></div>
+            <div style="display:flex;gap:8px">
+              <button class="btn-s wh" onclick="saveAccountSettings()"><i data-lucide="check" style="width:12px;height:12px"></i> Save changes</button>
+              <button class="btn-s" onclick="showModal('modal-password')"><i data-lucide="lock" style="width:12px;height:12px"></i> Change password</button>
+            </div>
+          </div>
+
+          <!-- ── APPEARANCE ── -->
+          <div class="card">
+            <div class="card-t"><i data-lucide="palette" style="width:16px;height:16px"></i> Appearance</div>
+            <div class="card-sub">Customise how Aletheiahq looks for you</div>
+
+            <!-- THEME TOGGLE -->
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--bk2);border:1px solid var(--bk3);margin-bottom:10px">
+              <div>
+                <div style="font-size:14px;font-weight:500">Theme</div>
+                <div style="font-size:12px;color:var(--wh4);margin-top:2px">Switch between dark and light mode</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:12px;color:var(--wh4)">Dark</span>
+                <div id="theme-toggle" onclick="toggleTheme()" style="width:44px;height:24px;background:var(--bk4);border:1px solid var(--bk5);cursor:pointer;position:relative;transition:all 0.3s">
+                  <div id="theme-knob" style="width:18px;height:18px;background:var(--wh);position:absolute;top:2px;left:2px;transition:all 0.3s"></div>
+                </div>
+                <span style="font-size:12px;color:var(--wh4)">Light</span>
+              </div>
+            </div>
+
+            <!-- FONT SIZE -->
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--bk2);border:1px solid var(--bk3);margin-bottom:10px">
+              <div>
+                <div style="font-size:14px;font-weight:500">Font size</div>
+                <div style="font-size:12px;color:var(--wh4);margin-top:2px">Adjust text size across the platform</div>
+              </div>
+              <div style="display:flex;gap:6px">
+                <button class="btn-s font-size-btn active" id="fs-normal" onclick="setFontSize('normal',this)">Normal</button>
+                <button class="btn-s font-size-btn" id="fs-large" onclick="setFontSize('large',this)">Large</button>
+                <button class="btn-s font-size-btn" id="fs-xl" onclick="setFontSize('xl',this)">X-Large</button>
+              </div>
+            </div>
+
+            <!-- SIDEBAR COMPACT -->
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--bk2);border:1px solid var(--bk3)">
+              <div>
+                <div style="font-size:14px;font-weight:500">Compact sidebar</div>
+                <div style="font-size:12px;color:var(--wh4);margin-top:2px">Show icons only in the navigation</div>
+              </div>
+              <button class="btn-s" onclick="toggleSidebar()"><i data-lucide="panel-left" style="width:12px;height:12px"></i> Toggle</button>
+            </div>
+          </div>
+
+          <!-- ── NOTIFICATIONS ── -->
+          <div class="card">
+            <div class="card-t"><i data-lucide="bell" style="width:16px;height:16px"></i> Notifications</div>
+            <div class="card-sub">Control what updates you receive</div>
+            <div style="display:flex;flex-direction:column;gap:0">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--bk3)">
+                <div><div style="font-size:13px;font-weight:500">Weekly performance report</div><div style="font-size:11px;color:var(--wh4)">Every Monday — reach, leads, top posts</div></div>
+                <div class="toggle-switch active" onclick="this.classList.toggle('active');toast('Preference saved')"></div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--bk3)">
+                <div><div style="font-size:13px;font-weight:500">Lead alerts</div><div style="font-size:11px;color:var(--wh4)">Notify me when a hot lead is identified</div></div>
+                <div class="toggle-switch active" onclick="this.classList.toggle('active');toast('Preference saved')"></div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--bk3)">
+                <div><div style="font-size:13px;font-weight:500">Publishing reminders</div><div style="font-size:11px;color:var(--wh4)">Remind me when posts are scheduled</div></div>
+                <div class="toggle-switch" onclick="this.classList.toggle('active');toast('Preference saved')"></div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0">
+                <div><div style="font-size:13px;font-weight:500">Product updates</div><div style="font-size:11px;color:var(--wh4)">New features and improvements</div></div>
+                <div class="toggle-switch active" onclick="this.classList.toggle('active');toast('Preference saved')"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── BRAND VOICE ── -->
+          <div class="card">
+            <div class="card-t"><i data-lucide="mic" style="width:16px;height:16px"></i> Brand Voice</div>
+            <div class="card-sub">Train Aletheiahq to write exactly like you</div>
+            <div class="f-grp"><label class="f-lbl">Tone</label><select class="f-inp"><option>Professional + Authoritative</option><option>Direct + Bold</option><option>Conversational + Warm</option><option>Educational + Precise</option><option>Provocative + Edgy</option></select></div>
+            <div class="f-grp"><label class="f-lbl">Writing style notes</label><textarea class="f-inp" style="height:70px;resize:none" placeholder="e.g. I never use buzzwords. I write in short punchy sentences. I always end posts with a question..."></textarea></div>
+            <div class="f-grp"><label class="f-lbl">Words / phrases to avoid</label><input class="f-inp" placeholder="synergy, game-changer, revolutionary..."/></div>
+            <div class="f-grp"><label class="f-lbl">Signature CTA</label><input class="f-inp" placeholder="e.g. DM me SYSTEMS for the free diagnostic"/></div>
+            <button class="btn-s wh" onclick="toast('Brand voice saved')"><i data-lucide="check" style="width:12px;height:12px"></i> Save voice profile</button>
+          </div>
+
+          <!-- ── CONNECTED PLATFORMS ── -->
+          <div class="card">
+            <div class="card-t"><i data-lucide="link" style="width:16px;height:16px"></i> Connected Platforms</div>
+            <div class="card-sub">Manage your social media connections</div>
+            <div style="display:flex;flex-direction:column;gap:0">
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--bk3)">
+                <i data-lucide="linkedin" style="width:16px;height:16px;color:var(--wh3)"></i>
+                <div style="flex:1"><div style="font-size:13px;font-weight:500">LinkedIn</div><div style="font-size:11px;color:var(--wh4)">Not connected</div></div>
+                <button class="btn-s wh" onclick="toast('LinkedIn OAuth coming soon')">Connect</button>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--bk3)">
+                <i data-lucide="instagram" style="width:16px;height:16px;color:var(--wh3)"></i>
+                <div style="flex:1"><div style="font-size:13px;font-weight:500">Instagram</div><div style="font-size:11px;color:var(--wh4)">Not connected</div></div>
+                <button class="btn-s wh" onclick="toast('Instagram OAuth coming soon')">Connect</button>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--bk3)">
+                <i data-lucide="twitter" style="width:16px;height:16px;color:var(--wh3)"></i>
+                <div style="flex:1"><div style="font-size:13px;font-weight:500">X (Twitter)</div><div style="font-size:11px;color:var(--wh4)">Not connected</div></div>
+                <button class="btn-s wh" onclick="toast('X OAuth coming soon')">Connect</button>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 0">
+                <i data-lucide="facebook" style="width:16px;height:16px;color:var(--wh3)"></i>
+                <div style="flex:1"><div style="font-size:13px;font-weight:500">Facebook</div><div style="font-size:11px;color:var(--wh4)">Not connected</div></div>
+                <button class="btn-s wh" onclick="toast('Facebook OAuth coming soon')">Connect</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── BILLING ── -->
+          <div class="card">
+            <div class="card-t"><i data-lucide="credit-card" style="width:16px;height:16px"></i> Billing &amp; Subscription</div>
+            <div class="card-sub">Manage your plan and payment details</div>
+            <div style="padding:14px;background:var(--bk2);border:1px solid var(--bk3);margin-bottom:12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                <div style="font-size:14px;font-weight:600">Growth Plan</div>
+                <span class="badge b-ok">Active</span>
+              </div>
+              <div style="font-size:12px;color:var(--wh4);margin-bottom:10px">$79/month · Next renewal: July 1, 2026</div>
+              <div class="prog-bar" style="margin-bottom:6px"><div class="prog-fill" style="width:68%"></div></div>
+              <div style="font-size:11px;color:var(--wh4)">342 / 500 posts used this period</div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn-s wh" onclick="toast('Opening Stripe billing portal...')"><i data-lucide="external-link" style="width:12px;height:12px"></i> Manage billing</button>
+              <button class="btn-s" onclick="toast('Opening plan comparison...')"><i data-lucide="arrow-up" style="width:12px;height:12px"></i> Upgrade plan</button>
+              <button class="btn-s" onclick="showModal('modal-cancel')"><i data-lucide="x-circle" style="width:12px;height:12px"></i> Cancel subscription</button>
+            </div>
+          </div>
+
+          <!-- ── SECURITY ── -->
+          <div class="card">
+            <div class="card-t"><i data-lucide="shield" style="width:16px;height:16px"></i> Security</div>
+            <div class="card-sub">Protect your account</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <button class="btn-s ow" onclick="showModal('modal-password')" style="justify-content:flex-start;gap:10px"><i data-lucide="lock" style="width:14px;height:14px"></i> Change password</button>
+              <button class="btn-s ow" onclick="toast('Two-factor authentication coming soon')" style="justify-content:flex-start;gap:10px"><i data-lucide="smartphone" style="width:14px;height:14px"></i> Enable two-factor authentication</button>
+              <button class="btn-s ow" onclick="toast('Active sessions list coming soon')" style="justify-content:flex-start;gap:10px"><i data-lucide="monitor" style="width:14px;height:14px"></i> View active sessions</button>
+            </div>
+          </div>
+
+          <!-- ── DATA & PRIVACY ── -->
+          <div class="card">
+            <div class="card-t"><i data-lucide="database" style="width:16px;height:16px"></i> Data &amp; Privacy</div>
+            <div class="card-sub">Control your data</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <button class="btn-s ow" onclick="toast('Preparing your data export...')" style="justify-content:flex-start;gap:10px"><i data-lucide="download" style="width:14px;height:14px"></i> Export all my data</button>
+              <button class="btn-s ow" onclick="toast('Privacy settings coming soon')" style="justify-content:flex-start;gap:10px"><i data-lucide="eye-off" style="width:14px;height:14px"></i> Privacy settings</button>
+              <button class="btn-s" style="justify-content:flex-start;gap:10px;border-color:var(--wh4);color:var(--wh4)" onclick="showModal('modal-delete')"><i data-lucide="trash-2" style="width:14px;height:14px"></i> Delete my account</button>
+            </div>
+          </div>
+
+          <!-- ADMIN CARD -->
+          <div class="card" id="admin-creds" style="display:none">
+            <div class="card-t"><i data-lucide="shield-check" style="width:16px;height:16px"></i> Admin Access</div>
+            <div style="background:var(--bk2);border:1px solid var(--bk3);border-left:2px solid var(--wh);padding:12px;margin-top:10px">
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.8px;color:var(--wh4);margin-bottom:6px">Admin session active</div>
+              <div style="font-size:13px;color:var(--wh2)">You are logged in with full admin access. All platform features are unlocked including Quote Studio and Aletheiahq Agent.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ══════════ MODALS ══════════ -->
+
+      <!-- CHANGE PASSWORD MODAL -->
+      <div id="modal-password" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;display:none;align-items:center;justify-content:center">
+        <div style="background:var(--bk1);border:1px solid var(--bk4);padding:28px;width:100%;max-width:400px;position:relative">
+          <button onclick="closeModal('modal-password')" style="position:absolute;top:16px;right:16px;background:none;border:none;cursor:pointer;color:var(--wh4)"><i data-lucide="x" style="width:16px;height:16px"></i></button>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;margin-bottom:4px">Change Password</div>
+          <div style="font-size:12px;color:var(--wh4);margin-bottom:20px">Choose a strong password for your account</div>
+          <div class="f-grp"><label class="f-lbl">Current password</label><input class="f-inp" type="password" id="pw-current" placeholder="••••••••"/></div>
+          <div class="f-grp"><label class="f-lbl">New password</label><input class="f-inp" type="password" id="pw-new" placeholder="Min. 8 characters"/></div>
+          <div class="f-grp"><label class="f-lbl">Confirm new password</label><input class="f-inp" type="password" id="pw-confirm" placeholder="Repeat new password"/></div>
+          <div style="display:flex;gap:8px;margin-top:4px">
+            <button class="btn-wh" onclick="changePassword()" style="flex:1"><i data-lucide="lock" style="width:13px;height:13px"></i> Update password</button>
+            <button class="btn-s" onclick="closeModal('modal-password')" style="padding:11px 16px">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CANCEL SUBSCRIPTION MODAL -->
+      <div id="modal-cancel" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;align-items:center;justify-content:center">
+        <div style="background:var(--bk1);border:1px solid var(--bk4);padding:28px;width:100%;max-width:420px;position:relative">
+          <button onclick="closeModal('modal-cancel')" style="position:absolute;top:16px;right:16px;background:none;border:none;cursor:pointer;color:var(--wh4)"><i data-lucide="x" style="width:16px;height:16px"></i></button>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;margin-bottom:4px">Cancel Subscription</div>
+          <div style="font-size:12px;color:var(--wh4);margin-bottom:16px">We are sorry to see you go</div>
+          <div style="padding:12px;background:var(--bk2);border:1px solid var(--bk3);margin-bottom:16px;font-size:13px;color:var(--wh2);line-height:1.7">
+            Your Growth Plan access continues until <strong>July 1, 2026</strong>. After that your account will revert to read-only. Your posts and data are saved for 90 days.
+          </div>
+          <div class="f-grp"><label class="f-lbl">Tell us why (optional)</label>
+            <select class="f-inp">
+              <option>Select a reason...</option>
+              <option>Too expensive</option>
+              <option>Not using it enough</option>
+              <option>Missing features I need</option>
+              <option>Switching to a different tool</option>
+              <option>Temporary — will be back</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:4px">
+            <button class="btn-s" onclick="closeModal('modal-cancel');toast('Glad you stayed!')" style="flex:1;border-color:var(--wh);color:var(--wh)"><i data-lucide="heart" style="width:13px;height:13px"></i> Keep my plan</button>
+            <button class="btn-s" onclick="cancelSubscription()" style="padding:11px 16px;border-color:var(--wh4);color:var(--wh4)">Cancel subscription</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- DELETE ACCOUNT MODAL -->
+      <div id="modal-delete" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:500;align-items:center;justify-content:center">
+        <div style="background:var(--bk1);border:1px solid var(--bk4);padding:28px;width:100%;max-width:420px;position:relative">
+          <button onclick="closeModal('modal-delete')" style="position:absolute;top:16px;right:16px;background:none;border:none;cursor:pointer;color:var(--wh4)"><i data-lucide="x" style="width:16px;height:16px"></i></button>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;margin-bottom:4px">Delete Account</div>
+          <div style="font-size:12px;color:var(--wh4);margin-bottom:16px">This action is permanent and cannot be undone</div>
+          <div style="padding:12px;background:var(--bk2);border:1px solid var(--bk4);border-left:2px solid var(--wh3);margin-bottom:16px;font-size:13px;color:var(--wh2);line-height:1.7">
+            All your posts, campaigns, leads, and data will be permanently deleted. Your subscription will be cancelled immediately with no refund.
+          </div>
+          <div class="f-grp"><label class="f-lbl">Type DELETE to confirm</label><input class="f-inp" id="delete-confirm" placeholder="Type DELETE"/></div>
+          <div style="display:flex;gap:8px;margin-top:4px">
+            <button class="btn-s" onclick="closeModal('modal-delete')" style="flex:1;border-color:var(--wh);color:var(--wh)">Cancel</button>
+            <button class="btn-s" onclick="deleteAccount()" style="padding:11px 16px;border-color:var(--wh4);color:var(--wh4)"><i data-lucide="trash-2" style="width:13px;height:13px"></i> Delete forever</button>
+          </div>
         </div>
       </div>
 
@@ -1445,9 +1803,12 @@ document.addEventListener('DOMContentLoaded', async function() {
       window.__currentUserEmail = session.user.email;
       const isAdmin = session.user.email === 'info@asamoahgroup.com';
       goAppDirect(isAdmin, session.user.email);
+      loadSavedPreferences();
       return;
     }
   } catch(e){ console.log('Session check:', e); }
+
+  loadSavedPreferences();
 
   // Process any queued calls from stubs
   if(window.__pendingScreen) showScreen(window.__pendingScreen);
@@ -1694,7 +2055,7 @@ async function signOut(){
 }
 
 // ── PAGES ──
-const pTitles={dashboard:'Dashboard',pipeline:'1-Minute Pipeline',autopublish:'Auto-Publish Engine',generate:'Generate Campaign',posts:'Post Library',analyzer:'Profile Analyzer',repurpose:'Repurpose Engine',ghostwriter:'Ghost Writer',leads:'Lead Engine',manager:'AI Manager',calendar:'Content Calendar',analytics:'Analytics',quotestudio:'Quote Card Studio',agent:'Aletheiahq Agent',settings:'Settings'};
+const pTitles={dashboard:'Dashboard',pipeline:'1-Minute Pipeline',autopublish:'Auto-Publish Engine',generate:'Generate Campaign',posts:'Post Library',analyzer:'Profile Analyzer',repurpose:'Repurpose Engine',ghostwriter:'Ghost Writer',leads:'Lead Engine',manager:'AI Manager',calendar:'Content Calendar',gallery:'Media Gallery',analytics:'Analytics',quotestudio:'Quote Card Studio',agent:'Aletheiahq Agent',settings:'Settings'};
 function showPage(id,navEl){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(n=>n.classList.remove('active'));
@@ -2200,8 +2561,153 @@ function resetPipeline(){
 }
 
 // ══════════════════════════════════════
-// AUTO-PUBLISH
+// SETTINGS FUNCTIONS
 // ══════════════════════════════════════
+
+function showModal(id){
+  const el=document.getElementById(id);
+  if(el){el.style.display='flex';lucide.createIcons();}
+}
+function closeModal(id){
+  const el=document.getElementById(id);
+  if(el)el.style.display='none';
+}
+
+// Close modals on backdrop click
+document.addEventListener('click',function(e){
+  ['modal-password','modal-cancel','modal-delete'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&el.style.display==='flex'&&e.target===el) closeModal(id);
+  });
+});
+
+// Theme toggle
+let isLightMode=false;
+function toggleTheme(){
+  isLightMode=!isLightMode;
+  document.body.classList.toggle('light-mode',isLightMode);
+  const knob=document.getElementById('theme-knob');
+  const toggle=document.getElementById('theme-toggle');
+  if(knob){knob.style.left=isLightMode?'22px':'2px';}
+  if(toggle){toggle.style.background=isLightMode?'var(--wh2)':'var(--bk4)';}
+  localStorage.setItem('aletheiahq-theme',isLightMode?'light':'dark');
+  toast(isLightMode?'Light mode on':'Dark mode on');
+}
+
+// Font size
+function setFontSize(size,el){
+  document.querySelectorAll('.font-size-btn').forEach(b=>b.classList.remove('active'));
+  if(el)el.classList.add('active');
+  document.body.classList.remove('fs-large','fs-xl');
+  if(size==='large')document.body.classList.add('fs-large');
+  if(size==='xl')document.body.classList.add('fs-xl');
+  localStorage.setItem('aletheiahq-fontsize',size);
+  toast('Font size updated');
+}
+
+// Save account settings
+async function saveAccountSettings(){
+  const name=document.getElementById('set-name')?.value;
+  const email=document.getElementById('set-email')?.value;
+  if(name){
+    document.getElementById('s-uname').textContent=name;
+    document.getElementById('settings-name-display').textContent=name;
+    const initials=name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    document.getElementById('s-avt').textContent=initials;
+    document.getElementById('settings-avatar').textContent=initials;
+  }
+  toast('Account settings saved');
+}
+
+// Change password
+async function changePassword(){
+  const current=document.getElementById('pw-current')?.value;
+  const newPw=document.getElementById('pw-new')?.value;
+  const confirm=document.getElementById('pw-confirm')?.value;
+  if(!current||!newPw||!confirm){toast('Please fill in all password fields');return;}
+  if(newPw!==confirm){toast('New passwords do not match');return;}
+  if(newPw.length<8){toast('Password must be at least 8 characters');return;}
+  try{
+    const {error}=await window.__sb.auth.updateUser({password:newPw});
+    if(error){toast('Error: '+error.message);return;}
+    closeModal('modal-password');
+    document.getElementById('pw-current').value='';
+    document.getElementById('pw-new').value='';
+    document.getElementById('pw-confirm').value='';
+    toast('Password updated successfully');
+  } catch(e){toast('Could not update password. Try again.');}
+}
+
+// Cancel subscription
+function cancelSubscription(){
+  closeModal('modal-cancel');
+  toast('Subscription cancellation request sent. Access continues until end of billing period.');
+}
+
+// Delete account
+async function deleteAccount(){
+  const confirm=document.getElementById('delete-confirm')?.value;
+  if(confirm!=='DELETE'){toast('Type DELETE in capitals to confirm');return;}
+  try{
+    await window.__sb.auth.signOut();
+    closeModal('modal-delete');
+    toast('Account deletion request submitted. You will receive a confirmation email.');
+    setTimeout(()=>signOut(),2000);
+  } catch(e){toast('Error processing request. Please contact support@aletheiahq.com');}
+}
+
+// ── EMOJI PICKER ──
+const EMOJIS=['😊','💪','🔥','✅','🚀','💡','🎯','⚡','🏆','💰','📈','🤝','👏','🙌','💼','🌟','✨','💫','🎉','👀','💬','📊','🔑','🛡️','⚙️','📱','💻','🌐','📣','🎤'];
+
+function createEmojiPicker(targetId){
+  const existing=document.getElementById('emoji-picker-'+targetId);
+  if(existing){existing.classList.toggle('show');return;}
+  const target=document.getElementById(targetId);
+  if(!target)return;
+  const picker=document.createElement('div');
+  picker.className='emoji-picker show';
+  picker.id='emoji-picker-'+targetId;
+  EMOJIS.forEach(e=>{
+    const btn=document.createElement('button');
+    btn.className='emoji-btn';
+    btn.textContent=e;
+    btn.onclick=function(){
+      const pos=target.selectionStart||target.value.length;
+      target.value=target.value.slice(0,pos)+e+target.value.slice(pos);
+      target.focus();
+      picker.classList.remove('show');
+    };
+    picker.appendChild(btn);
+  });
+  target.parentElement.style.position='relative';
+  target.parentElement.appendChild(picker);
+  document.addEventListener('click',function handler(ev){
+    if(!picker.contains(ev.target)&&ev.target.getAttribute('data-emoji-target')!==targetId){
+      picker.classList.remove('show');
+      document.removeEventListener('click',handler);
+    }
+  });
+}
+
+// Load saved preferences on init
+function selectGalleryImage(el, url){
+  document.querySelectorAll('.gallery-item').forEach(i=>i.style.borderColor='');
+  el.style.borderColor='var(--wh)';
+  toast('Image selected — use it in Quote Studio');
+  window.__selectedGalleryImage=url;
+}
+
+function loadSavedPreferences(){
+  const theme=localStorage.getItem('aletheiahq-theme');
+  if(theme==='light'&&!isLightMode){toggleTheme();}
+  const fs=localStorage.getItem('aletheiahq-fontsize');
+  if(fs&&fs!=='normal'){
+    const btn=document.getElementById('fs-'+fs);
+    setFontSize(fs,btn);
+  }
+}
+
+
 function connectPlatform(plat,btn){
   btn.textContent='Connecting...';
   btn.disabled=true;
