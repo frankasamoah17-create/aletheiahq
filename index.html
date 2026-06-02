@@ -1810,6 +1810,28 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   loadSavedPreferences();
 
+  // Check URL for payment redirect after email confirmation
+  const urlParams = new URLSearchParams(window.location.search);
+  if(urlParams.get('payment') === 'true'){
+    try {
+      const { data: { session } } = await window.__sb.auth.getSession();
+      if(session){
+        window.__currentUserId = session.user.id;
+        window.__currentUserEmail = session.user.email;
+        showScreen('s-payment');
+        return;
+      }
+    } catch(e){}
+    showScreen('s-login');
+    const errEl = document.getElementById('login-error');
+    if(errEl){
+      errEl.textContent = '✓ Email confirmed! Sign in to continue to payment.';
+      errEl.style.display = 'block';
+      errEl.style.borderLeftColor = 'var(--wh)';
+    }
+    return;
+  }
+
   // Process any queued calls from stubs
   if(window.__pendingScreen) showScreen(window.__pendingScreen);
   if(window.__pendingBilling) setBilling(window.__pendingBilling);
